@@ -1,7 +1,9 @@
 from . import modules
 from . import cqcode
+import __main__
 import sys
 import time
+import yaml
 class plugin():
     def __init__(self, api_queue, api_res_queue, log_queue,content_livetime: int = 360):
         self.content_livetime = content_livetime
@@ -16,11 +18,11 @@ class plugin():
         if data['message_type'] == 'group':#调用黑名单函数
             group_id = data['group_id']
             user_id = data['user_id']
-            if self.check_blacklist(user_id,group_id):#调用黑名单函数
+            if not self.check_blacklist_and_permission(user_id,group_id):#调用黑名单函数
                 return False
         elif data['message_type'] == 'private':
             user_id = data['user_id']
-            if self.check_blacklist(user_id,0):#调用黑名单函数,非群聊传参0
+            if not self.check_blacklist_and_permission(user_id,0):#调用黑名单函数,非群聊传参0
                 return False
         else:
             return False
@@ -65,8 +67,6 @@ class plugin():
             self.content = False
             return False
         
-    def check_blacklist(self,user_id: int,group_id : int):
-        return 0
-
-
-
+    def check_blacklist_and_permission(self,user_id: int,group_id : int):
+        
+        return True

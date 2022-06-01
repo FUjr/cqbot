@@ -1,5 +1,6 @@
 import sys
 class demo:
+    
     def __init__(self,api_queue,api_res_queue,log_queue) -> None:
         self.log_queue = log_queue
 

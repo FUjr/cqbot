@@ -1,4 +1,0 @@
-blacklist = {
-    'group': [],
-    'private': []
-}
