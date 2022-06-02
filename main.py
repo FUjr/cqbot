@@ -9,10 +9,7 @@ import time
 import notice
 import message
 import request
-import permission
-import black_list
 
-blacklist = black_list.blacklist
 ws = 'ws://192.168.3.5:6700'
 http_get = 'http://192.168.3.5:678/'
 log_level = 0
@@ -60,7 +57,7 @@ query_api = threading.Thread(target=query_api,args=(api_queue,api_res_queue))
 query_api.start() 
 print_log = threading.Thread(target=log_thread,args=(log_queue,))
 print_log.start()
-asyncio.run(getmessage())
+asyncio.run(getmessage()) 
 
 
     
