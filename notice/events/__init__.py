@@ -1,0 +1,1 @@
+events_list = ['group_recall','friend_recall']
