@@ -17,7 +17,7 @@ class cq_image:
                 'message' : user_id + group_id
             }
             api_queue.put([send_msg,post_data])
-            log_queue.put([1,api_res.get()])s
+            log_queue.put([1,api_res.get()])
             message = data['message'].replace(',type=flash', '')
             
             post_data = {
