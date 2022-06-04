@@ -1,7 +1,19 @@
 import sys
-permission = {"permission" : "all"}
+alia = ['demo']
+
+permission = {
+    'group' : [True,[]],
+    'private' : [True,[]],
+    'member_id' : {},
+    'role' : ''
+}
+help = {
+    'brief_help' : '这是我用来测试的，无意义',
+    'more' : '这是我用来测试的，无意义',
+    'alia' : alia
+}
+
 class demo:
-    
     def __init__(self,api_queue,api_res_queue,log_queue) -> None:
         self.log_queue = log_queue
 

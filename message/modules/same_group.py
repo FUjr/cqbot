@@ -1,6 +1,19 @@
 from distutils.command.build_scripts import first_line_re
 import json
 import re
+
+alia = ['内鬼']
+help = {
+    'brief_help' : '来看看别的群的内鬼吧～（内鬼是调侃啦）',
+    'more' : '首先发送 /内鬼 激活bot，然后现在下一条消息中输入想测试的群号（多个群号可用任意换行以外的字符分割），然后bot就会告诉你本群和那个(些）群有几个共同成员啦～',
+    'alia' : alia
+}
+permission = {
+    'group' : [True,[]],
+    'private' : [True,[]],
+    'member_id' : {},
+    'role' : 'member'
+}
 class same_group:
     permission = {"permission": "group_only"}
     def __init__(self,api_queue,api_res_queue,log_queue) -> None:

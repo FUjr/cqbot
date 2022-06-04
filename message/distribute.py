@@ -13,12 +13,12 @@ class distribute:
         #最后活跃的聊天
         self.dialog_livetime = dialog_livetime
         self.dialog_max_num = dialog_max_num
-        self.low_level_plugin = modules.low_level_plugin.low_level_plugin(self.api_queue,self.api_res_queue,self.log_queue)
+        self.hook = modules.hook.hook(self.api_queue,self.api_res_queue,self.log_queue)
 
     def distribute(self,data : dict) -> None:
         
         
-        if_continue = self.low_level_plugin.run(data)
+        if_continue = self.hook.run(data)
         if if_continue:
             return 0
         else:

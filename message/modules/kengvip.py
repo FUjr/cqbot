@@ -1,4 +1,16 @@
 import json
+alia = ['大雕的韭菜']
+help = {
+    'brief_help' : '看看大雕在这个群坑了多少个人去他的付费群吧～',
+    'more' : '直接发送 /大雕的韭菜 就可以知道有几颗韭菜被割啦',
+    'alia' : alia
+}
+permission = {
+    'group' : [True,[]],
+    'private' : [False,[]],
+    'member_id' : {},
+    'role' : 'member'
+}
 class kengvip:
     permission = {"permission": "group_only"}
     def __init__(self,api_queue,api_res_queue,log_queue) -> None:
