@@ -1,4 +1,3 @@
-from . import hook
 import os
 import json
 
