@@ -4,7 +4,7 @@ from tokenize import group
 class cq_image:
     def __init__(self, data, api_queue, api_res,log_queue):
         if 'type=flash' in data['message']:
-            api = 'send_msg'
+            send_msg = 'send_msg'
             user_id = str(data['user_id'])
             try:
                 group_id = '在群' + str(data['group_id']) + '发的闪照'
@@ -16,16 +16,15 @@ class cq_image:
                 'user_id' : 1194436766,
                 'message' : user_id + group_id
             }
-            api_queue.put([api,post_data])
-            log_queue.put([1,api_res.get()])
-            log_queue.put([1,api_res.get()])
+            api_queue.put([send_msg,post_data])
+            log_queue.put([1,api_res.get()])s
             message = data['message'].replace(',type=flash', '')
             
             post_data = {
                 'user_id' : 1194436766,
                 'message' : message
             }
-            api_queue.put([api,post_data])
+            api_queue.put([send_msg,post_data])
             log_queue.put([1,api_res.get()])
         else:
             pass
