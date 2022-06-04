@@ -26,9 +26,27 @@ class menu:
         split_msg = message.split(' ')
         if len(split_msg) == 2:
             command = split_msg[1]
-            self.get_cmd_help(command,'more')
+            message = self.get_cmd_help(command,'more')
         else:
-            self.get_cmd_help('all_cmd','brief_help')
+            message = self.get_cmd_help('all_cmd','brief_help')
+        if data['message_type'] == 'private':
+            send_api = 'send_msg'
+            user_id = data['user_id']
+            post_data = {
+                'user_id' : user_id,
+                'message' : message
+            }
+        elif data['message_type'] == 'group':
+            send_api = 'send_group_msg'
+            user_id = data['user_id']
+            group_id = data['group_id']
+            post_data = {
+                'user_id' : user_id,
+                'group_id' : group_id,
+                'message' : message
+            }
+        self.api_queue.put([send_api,post_data])
+        self.api_res_queue.get()
         return False
 
     def get_cmd_help(self,cmd,index):
