@@ -1,5 +1,6 @@
 from . import modules
 from . import cqcode
+from importlib import reload
 import __main__
 import sys
 import time
@@ -9,6 +10,7 @@ class plugin():
     permission_dict = {}
     help_dict = {}
     command_dict = {}
+    hash_dict = {}
     def __init__(self, api_queue, api_res_queue, log_queue,content_livetime: int = 360):
         self.content_livetime = content_livetime
         self.api_queue = api_queue
@@ -35,8 +37,9 @@ class plugin():
             command = message[0].split('/')[1]
             if command in list(modules.command_dict.keys()):
                 #若在字典内，尝试导入模块
-                __import__(__name__.replace(__class__.__name__,'modules.') + modules.command_dict[command])
-                if self.check_permission(command): 
+                module_name = __name__.replace(__class__.__name__,'modules.') + modules.command_dict[command]
+                __import__(module_name)
+                if self.check_permission(modules.command_dict[command]): 
                     pass
                 else:
                     self.log_queue.put((5,'permission denied'))
@@ -100,9 +103,7 @@ class plugin():
             with open('permission/'+ command +'_permission.json','r') as permission_file:
                 try:
                     permission = json.load(permission_file)
-                    print(__class__.permission_dict)
                     __class__.permission_dict[command] =  permission
-                    print(permission)
                 except json.decoder.JSONDecodeError:
                     self.init_permission(command)
                     return False
@@ -125,10 +126,12 @@ class plugin():
             }
             sendable = permission['group'][0]
             special_member_dict = permission['member_id'].get(user_id + group_id)
-            command_role_requirement = permission['role']
+            command_role_requirement = privillege_map.get(permission.get('role'))
+
             if isinstance(command_role_requirement,str):
             #若命令有成员权限需求，则直接判断成员权限即可
-                if privillege_map[self.data['sender']['role']] > privillege_map.get(command_role_requirement):
+                print(self.data['sender']['role'])
+                if privillege_map[self.data['sender']['role']] > command_role_requirement:
                     return True
                 else:
                     return False
@@ -142,18 +145,20 @@ class plugin():
                         if time.time() > special_member_dict[user_id]:
                             sendable = ~sendable
                     else:
-                        sendable = ~sendable    
-        print(sendable)
+                        sendable = ~sendable
         return sendable
             
-
     def init_permission(self,command):
         if not os.path.isdir('permission'):
             os.mkdir('permission')
         with open('permission/'+ command +'_permission.json','w') as permission_file:
+                modulel_name = __name__.replace(__class__.__name__,'modules.') + command
+                if modulel_name in sys.modules:
+                    reload(sys.modules[modulel_name])
+                else:
+                    __import__(modulel_name)
                 try:
-                    __import__(__name__.replace(__class__.__name__,'modules.') + modules.command_dict[command])
-                    permission =  getattr(sys.modules[__name__.replace(__class__.__name__,'modules.') + modules.command_dict[command]], 'permission')
+                    permission =  getattr(sys.modules[__name__.replace(__class__.__name__,'modules.') + command], 'permission')
                     json.dump(permission,permission_file)
                 except Exception as e:
                     self.log_queue.put([1,e.__context__])

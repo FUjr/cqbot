@@ -5,7 +5,7 @@ permission = {
     'group' : [True,[]],
     'private' : [True,[]],
     'member_id' : {},
-    'role' : ''
+    'role' : 'member'
 }
 help = {
     'brief_help' : '这是我用来测试的，无意义',

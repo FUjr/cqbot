@@ -16,7 +16,11 @@ class group:
             approve = True
             flag = data['flag']
             if approve == True:
-                self.api_queue.put(api + '?approve=true&flag=' + flag)
+                post_data = {
+                    'approve' : True,
+                    'flag' : flag,
+                }
+                self.api_queue.put([api,post_data])
                 self.log_queue.put([1,self.api_res.get()])
             else:
                 self.log_queue.put([1,'ignored friend request' + time.strftime("%Y%m%d",time.localtime())])

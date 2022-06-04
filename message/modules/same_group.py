@@ -31,12 +31,17 @@ class same_group:
         other_group_jointime = {}
         first_in = 0
         for group_id in group_list:
-            self.api_queue.put(group_member_api + '?group_id=' + str(group_id))
+
+            post_data = {
+                'group_id' : group_id
+            }
+            self.api_queue.put([group_member_api,post_data])
+
             other_group_info = json.loads(self.api_res_queue.get())
             if other_group_info['status'] == "failed" :
                 return '[群聊不存在或者我没加群]'
             other_group_list = other_group_info['data']
-            self.api_queue.put(group_info_api + '?group_id=' + str(group_id))
+            self.api_queue.put([group_info_api,post_data])
             group_name = json.loads(self.api_res_queue.get())['data']['group_name']
             group_name_list.append(group_name)
             
@@ -59,7 +64,10 @@ class same_group:
         group_member = set()
         jointime = {}
         group_member_api = 'get_group_member_list'
-        self.api_queue.put(group_member_api + '?group_id=' + str(self.group_id))
+        post_data = {
+                'group_id' : self.group_id
+            }
+        self.api_queue.put([group_member_api,post_data])
         group_member_id_list = json.loads(self.api_res_queue.get())['data']
         for member_info in group_member_id_list:
             jointime[member_info['user_id']] = member_info['join_time']
@@ -72,17 +80,17 @@ class same_group:
         next(self.g)
         message = '来看看有几个内鬼吧～ 在下一条消息输入待测群号，用换行以外的字符分隔'
         if data['message_type'] == 'private':
-            user_id = data['user_id']
-            api = "send_group_msg?user_id=" + str(user_id) +"&message="  + message
-            self.api_queue.put(api)
-            self.api_res_queue.get()
+            pass
         elif data['message_type'] == 'group':
             count = 0
             group_id = data['group_id']
             self.group_id = group_id
-            api = "send_group_msg?group_id=" + str(group_id) +"&message="  + message
-            self.log_queue.put([1,api])
-            self.api_queue.put(api)
+            send_group_msg = "send_group_msg"
+            post_data = {
+                "group_id" : str(group_id) ,
+                "message"  : message
+                }
+            self.api_queue.put([send_group_msg,post_data])
             self.api_res_queue.get()
         return self
 
@@ -103,7 +111,10 @@ class same_group:
         msg = 0
         msg = self.get_same_people(group_id_list)
         self.log_queue.put([1,msg])
-        api = "send_group_msg?group_id=" + str(data['group_id']) +"&message=" + msg
-        self.log_queue.put([1,api])
-        self.api_queue.put(api)
+        send_group_msg = "send_group_msg"
+        post_data = {
+            "group_id" : self.group_id ,
+            "message"  : msg
+            }
+        self.api_queue.put([send_group_msg,post_data])
         self.api_res_queue.get()

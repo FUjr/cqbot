@@ -36,7 +36,9 @@ def distribute(data : dict) -> None:
 def query_api( api_queue : Queue,api_res_queue : Queue) -> None:
     while True:
         data = api_queue.get()
-        res = requests.get(http_get + data)
+        post_data = data[1]
+        url = http_get + data[0]
+        res = requests.post(url,json = post_data)
         api_res_queue.put(res.text)
 
 
