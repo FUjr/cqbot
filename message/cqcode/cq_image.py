@@ -1,6 +1,3 @@
-from tokenize import group
-
-
 class cq_image:
     def __init__(self, data, api_queue, api_res,log_queue):
         if 'type=flash' in data['message']:

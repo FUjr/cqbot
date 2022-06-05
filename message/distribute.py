@@ -1,6 +1,6 @@
 from .cqcode import cq_image
-from . import plugin
-from . import modules
+from . import load_plugin
+from . import plugins
 
 class distribute:
     def __init__(self,api_queue ,api_res_queue ,log_queue,dialog_livetime: int = 360 ,dialog_max_num: int = 1000):
@@ -13,7 +13,7 @@ class distribute:
         #最后活跃的聊天
         self.dialog_livetime = dialog_livetime
         self.dialog_max_num = dialog_max_num
-        self.hook = modules.hook.hook(self.api_queue,self.api_res_queue,self.log_queue)
+        self.hook = plugins.hook.hook(self.api_queue,self.api_res_queue,self.log_queue)
 
     def distribute(self,data : dict) -> None:
         
@@ -66,7 +66,7 @@ class distribute:
 
 
     def new_dialog(self,data : dict) -> object:
-        dialog = plugin.plugin(self.api_queue,self.api_res_queue,self.log_queue)
+        dialog = load_plugin.plugin(self.api_queue,self.api_res_queue,self.log_queue)
         #初始化对话参数
         dialog = dialog.new_dialog(data)
         return dialog
