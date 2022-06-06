@@ -1,3 +1,4 @@
-import json
-data = { 'a' : 1234}
-print(json.dumps(data))
+a = 'a'
+b = 'b'
+msg = "%s %s c" %(a,b)
+print(msg)
