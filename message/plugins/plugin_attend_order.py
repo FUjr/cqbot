@@ -1,6 +1,4 @@
 import json
-
-from requests import post
 from . import base_utility
 alia = ['进群顺序']
 help = {
@@ -14,13 +12,13 @@ permission = {
     'member_id' : {},
     'role' : ''
 }
-class attend_order(base_utility.base_utility):
+class plugin_attend_order(base_utility.base_utility):
     def run(self,data) -> False:
         if data['message_type'] != 'group':
             return False
         self.data = data
         msg = self.get_attend_order()
-        self.send_back_msg(data,msg)
+        self.send_back_msg(msg)
         return False
 
         

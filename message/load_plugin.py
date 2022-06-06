@@ -6,7 +6,7 @@ import sys
 import time
 import json
 import os
-class plugin():
+class load_plugin():
     permission_dict = {}
     help_dict = {}
     command_dict = {}
@@ -46,7 +46,8 @@ class plugin():
                     return False
                 #try:
                 if 1 == 1:
-                    handler = getattr(sys.modules[__name__.replace(__class__.__name__,'plugins.') + plugins.command_dict[command]], plugins.command_dict[command])(self.api_queue,self.api_res_queue,self.log_queue)
+                    handler = getattr(sys.modules[__name__.replace(__class__.__name__,'plugins.') + plugins.command_dict[command]], plugins.command_dict[command])(data,
+                                                                                                                                                                   self.api_queue,self.api_res_queue,self.log_queue)
                     self.log_queue.put([1,'loaded: ' + plugins.command_dict[command]])
                     self.content = handler.run(data) #需要保存状态的模块，请在第一次run时返回self，不需要content的请返回False
                     self.log_queue.put([1,'runed: ' + plugins.command_dict[command]])
@@ -97,10 +98,11 @@ class plugin():
         if command in __class__.permission_dict:
             permission = __class__.permission_dict[command]
         else:
-            if not os.path.exists('permission/'+ command +'_permission.json'):
+            permission_file_path = os.path.dirname(__file__) + os.sep + 'plugins'  + os.sep + 'permission' + os.sep + command +'_permission.json'
+            if not os.path.exists(permission_file_path):
                 if self.init_permission(command) == False:
                     return False
-            with open('permission/'+ command +'_permission.json','r') as permission_file:
+            with open(permission_file_path,'r') as permission_file:
                 try:
                     permission = json.load(permission_file)
                     __class__.permission_dict[command] =  permission
@@ -110,12 +112,10 @@ class plugin():
 
 
         user_id = self.data['user_id']
-       
-        
         if self.data['message_type'] == 'private':
             sendable = permission['private'][0]
-            if user_id in permission['private'][1]:
-                sendable = ~sendable
+            if str(user_id) in permission['private'][1]:
+                sendable =not sendable
         
         if self.data['message_type'] == 'group':
             group_id = self.data['group_id']
@@ -125,40 +125,41 @@ class plugin():
                 'member' : 3 
             }
             sendable = permission['group'][0]
-            special_member_dict = permission['member_id'].get(user_id + group_id)
+            
+            special_member_dict = permission['member_id'].get(str(user_id) + '-' + str(group_id))
+            allow_in_all = permission['member_id'].get('all' + '_' + str(user_id))
             command_role_requirement = privillege_map.get(permission.get('role'))
-
             if isinstance(command_role_requirement,str):
             #若命令有成员权限需求，则直接判断成员权限即可
-                print(self.data['sender']['role'])
                 if privillege_map[self.data['sender']['role']] > command_role_requirement:
                     return True
                 else:
                     return False
 
-            if group_id in permission['group'][1]:
+            if str(group_id)  in permission['group'][1]:
                 #若第一个元素为true，则其他列表为黑名单。第一个元素为false时，则其他列表为白名单。因此当存在性与第一元素相反时，可以判断为true
-                sendable = ~sendable
+                sendable = not sendable
             if isinstance(special_member_dict,dict):
-                if user_id in special_member_dict:
-                    if isinstance(special_member_dict[user_id],float):
-                        if time.time() > special_member_dict[user_id]:
-                            sendable = ~sendable
-                    else:
-                        sendable = ~sendable
+                if isinstance(special_member_dict[user_id],float):
+                    if time.time() > special_member_dict[user_id]:
+                        sendable = not sendable
+                else:
+                    sendable = not sendable
+            print(allow_in_all)
         return sendable
             
     def init_permission(self,command):
-        if not os.path.isdir('permission'):
-            os.mkdir('permission')
-        with open('permission/'+ command +'_permission.json','w') as permission_file:
+        permission_file_path = os.path.dirname(__file__) + os.sep + 'plugins'  + os.sep + 'permission' + os.sep + command +'_permission.json'
+        if not os.path.isdir(os.path.dirname(__file__) + os.sep + 'plugins'  + os.sep + 'permission'):
+            os.mkdir(os.path.dirname(__file__) + os.sep + 'plugins'  + os.sep + 'permission')
+        with open(permission_file_path,'w') as permission_file:
                 modulel_name = __name__.replace(__class__.__name__,'plugins.') + command
                 if modulel_name in sys.modules:
                     reload(sys.modules[modulel_name])
                 else:
                     __import__(modulel_name)
                 try:
-                    permission =  getattr(sys.modules[__name__.replace(__class__.__name__,'modules.') + command], 'permission')
+                    permission =  getattr(sys.modules[__name__.replace(__class__.__name__,'plugins.') + command], 'permission')
                     json.dump(permission,permission_file)
                 except Exception as e:
                     self.log_queue.put([1,e.__context__])

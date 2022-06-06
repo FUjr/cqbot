@@ -9,7 +9,7 @@ alia = ['reload']
 
 permission = {
     'group' : [False,[]],
-    'private' : [False,[1194436766]],
+    'private' : [False,['1194436766']],
     'member_id' : {},
     'role' : 0
 }
@@ -21,7 +21,7 @@ help = {
 }
 
 
-class reload_plugin(base_utility.base_utility):
+class plugin_reload_plugin(base_utility.base_utility):
     def run(self,data) -> False:
         self.data = data
         command = data['message'].split(' ')
@@ -37,7 +37,7 @@ class reload_plugin(base_utility.base_utility):
             if command[1] == 'permission':
                 msg = self.reset_permission(command[2])
                 msg = msg if msg != '' else 'command not found'
-                self.send_back_msg(data,msg)
+                self.send_back_msg(msg)
         return False
 
     def reload_help(self):
@@ -59,15 +59,15 @@ class reload_plugin(base_utility.base_utility):
                     pass
         with open(dir + '/help.json','w') as hlep_file:
             json.dump(help_info_dir,hlep_file)
-        __main__.message.plugin.plugin.help_dict = help_info_dir
-        self.send_back_msg(self.data,'done')
+        __main__.message.load_plugin.load_plugin.help_dict = help_info_dir
+        self.send_back_msg('done')
     
     def reload_alias(self):
         dir = os.path.dirname(__file__)
         filelist = os.listdir(dir)
         command_dict = {} 
         for i in filelist:
-            if i.endswith('py'):
+            if i.endswith('py') and i.startswith('plugin_'):
                 module = i.replace('.py',"")
                 modulename = __name__.replace(__class__.__name__,"") + module
                 if modulename in sys.modules:
@@ -80,17 +80,18 @@ class reload_plugin(base_utility.base_utility):
                         command_dict[alia] = module
                 except Exception as e:
                     pass
-        with open(dir + '/command.json','w') as command_file:
+        cmd_path = dir + os.sep + 'command.json'
+        with open(cmd_path,'w') as command_file:
             json.dump(command_dict,command_file)
-        __main__.message.modules.command_dict = command_dict
-        self.send_back_msg(self.data,'done')
+        __main__.message.plugins.command_dict = command_dict
+        self.send_back_msg('done')
         
     def reset_permission(self,command):
         msg = ''
-        permission_file_path = 'permission/'+ command +'_permission.json'
+        permission_file_path = os.path.dirname(__file__) + os.sep + 'permission' + os.sep + command +'_permission.json'
         if os.path.exists(permission_file_path):
             os.remove(permission_file_path)
             msg += 'removed' + permission_file_path
-        if command in __main__.message.plugin.plugin.permission_dict:
-            del __main__.message.plugin.plugin.permission_dict[command]
+        if command in __main__.message.load_plugin.load_plugin.permission_dict:
+            del __main__.message.load_plugin.load_plugin.permission_dict[command]
             msg += 'removed permission info in memery'

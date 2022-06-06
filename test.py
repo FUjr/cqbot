@@ -1,4 +1,3 @@
-a = 'a'
-b = 'b'
-msg = "%s %s c" %(a,b)
-print(msg)
+test = ["aaa%s"]
+fjr = 'asd'
+print(test[0] %fjr)

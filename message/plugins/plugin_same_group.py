@@ -15,7 +15,7 @@ permission = {
     'member_id' : {},
     'role' : 'member'
 }
-class same_group(base_utility.base_utility):
+class plugin_same_group(base_utility.base_utility):
     def get_same_people(self,group_list):
         count = 0
         group_member_api = 'get_group_member_list'
@@ -74,7 +74,7 @@ class same_group(base_utility.base_utility):
         if data['message_type'] == 'private':
             return False
         elif data['message_type'] == 'group':
-            self.send_back_msg(data,message)
+            self.send_back_msg(message)
         return self
 
     def add(self,data) -> None:
@@ -93,4 +93,4 @@ class same_group(base_utility.base_utility):
         msg = 0
         msg = self.get_same_people(group_id_list)
         self.add_log(1,msg)
-        self.send_back_msg(data,msg)
+        self.send_back_msg(msg)

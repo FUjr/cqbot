@@ -14,7 +14,7 @@ help = {
     'alia' : alia
 }
 
-class demo(base_utility.base_utility):
+class plugin_demo(base_utility.base_utility):
 
     def main(self) -> None:
         res = yield 1

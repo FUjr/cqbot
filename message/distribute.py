@@ -66,7 +66,7 @@ class distribute:
 
 
     def new_dialog(self,data : dict) -> object:
-        dialog = load_plugin.plugin(self.api_queue,self.api_res_queue,self.log_queue)
+        dialog = load_plugin.load_plugin(self.api_queue,self.api_res_queue,self.log_queue)
         #初始化对话参数
         dialog = dialog.new_dialog(data)
         return dialog

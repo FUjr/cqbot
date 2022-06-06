@@ -1,23 +1,24 @@
 import abc
 import json
 class base_utility:
-    def __init__(self,api_queue,api_res_queue,log_queue) -> None:
+    def __init__(self,first_message,api_queue,api_res_queue,log_queue) -> None:
         self.api_queue  = api_queue
         self.api_res_queue = api_res_queue
         self.log_queue = log_queue
+        self.first_message = first_message
 
-    def send_back_msg(self,data:dict,message):
-        if data['message_type'] == 'private':
+    def send_back_msg(self,message):
+        if self.first_message['message_type'] == 'private':
             send_api = 'send_msg'
-            user_id = data['user_id']
+            user_id = self.first_message['user_id']
             post_data = {
                 'user_id' : user_id,
                 'message' : message
             }
-        elif data['message_type'] == 'group':
+        elif self.first_message['message_type'] == 'group':
             send_api = 'send_group_msg'
-            user_id = data['user_id']
-            group_id = data['group_id']
+            user_id = self.first_message['user_id']
+            group_id = self.first_message['group_id']
             post_data = {
                 'user_id' : user_id,
                 'group_id' : group_id,

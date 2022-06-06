@@ -41,18 +41,18 @@ class kengvip(base_utility.base_utility):
                 
 
     
-    def run(self,data) -> object:
+    def plugin_kengvip(self,data) -> object:
         message = '来看看大雕在这个群坑了多少人去付费群吧～'
         if data['message_type'] == 'private':
             pass
         elif data['message_type'] == 'group':
             self.group_id = data['group_id']
             count = 0
-            self.send_back_msg(data,message)
+            self.send_back_msg(message)
             count = self.get_group_info()
             count = str(count)
             self.add_log(1,count)
-            self.send_back_msg(data,"大雕在本群一共割了"  + count + "颗韭菜")
+            self.send_back_msg("大雕在本群一共割了"  + count + "颗韭菜")
         return False
 
     
