@@ -68,7 +68,7 @@ class plugin_same_group(base_utility.base_utility):
 
     def run(self,data) -> object:
         self.g = self.main()
-        self.log(0,data)
+        self.add_log(0,data)
         next(self.g)
         message = '来看看有几个内鬼吧～ 在下一条消息输入待测群号，用换行以外的字符分隔'
         if data['message_type'] == 'private':
