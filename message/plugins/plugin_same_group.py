@@ -58,7 +58,7 @@ class plugin_same_group(base_utility.base_utility):
 
         group_member_api = 'get_group_member_list'
         post_data = {
-                'group_id' : self.group_id
+                'group_id' : self.first_message['group_id']
             }
         group_member_id_list = self.query_api(group_member_api,post_data)['data']
         for member_info in group_member_id_list:
