@@ -36,7 +36,7 @@ class plugin_menu(base_utility.base_utility):
                 __main__.message.load_plugin.load_plugin.help_dict = json.load(help_file)
         if cmd == 'all_cmd':
             print(__main__.message.load_plugin.load_plugin.help_dict)
-            msg = '触发命令需要在关键词前增加/，如需获得某命令的帮助，请输入 /help xxx。'
+            msg = '触发命令需要在关键词前增加/，如需获得某命令的帮助，请输入 /help xxx。\n'
             for key in __main__.message.load_plugin.load_plugin.help_dict :
                 alia_list = ' '.join(__main__.message.load_plugin.load_plugin.help_dict[key]['alia'])
                 help_info = __main__.message.load_plugin.load_plugin.help_dict[key][index]

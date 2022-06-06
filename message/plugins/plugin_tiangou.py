@@ -18,7 +18,7 @@ help = {
 class plugin_tiangou(base_utility.base_utility):
     
     def main(self) -> None:
-        self.send_back_msg('舔狗启动！！')
+        self.send_back_msg('从现在起，我就是你的舔狗了！！！！你就是我见一个爱一个里最爱的')
         nick_name = self.first_message['sender']['nickname']
         print(nick_name)
         res = yield 1
