@@ -1,3 +1,4 @@
+from types import NoneType
 from . import plugins
 from . import cqcode
 from importlib import reload
@@ -127,25 +128,35 @@ class load_plugin():
             sendable = permission['group'][0]
             
             special_member_dict = permission['member_id'].get(str(user_id) + '-' + str(group_id))
-            allow_in_all = permission['member_id'].get('all' + '_' + str(user_id))
+            allow_in_all = permission['member_id'].get('all' + '-' + str(user_id))
             command_role_requirement = privillege_map.get(permission.get('role'))
-            if isinstance(command_role_requirement,str):
-            #若命令有成员权限需求，则直接判断成员权限即可
-                if privillege_map[self.data['sender']['role']] > command_role_requirement:
-                    return True
-                else:
-                    return False
+            
 
             if str(group_id)  in permission['group'][1]:
                 #若第一个元素为true，则其他列表为黑名单。第一个元素为false时，则其他列表为白名单。因此当存在性与第一元素相反时，可以判断为true
                 sendable = not sendable
+            
+            #对于群内特殊名单用户，若其在名单且有未过期时间，则获取相反权限
             if isinstance(special_member_dict,dict):
                 if isinstance(special_member_dict[user_id],float):
                     if time.time() > special_member_dict[user_id]:
                         sendable = not sendable
                 else:
                     sendable = not sendable
-            print(allow_in_all)
+                    
+            #对all-user的特殊名单，若其在名单且有未过期时间，则直接获得权限
+            if isinstance(allow_in_all,NoneType):
+                pass
+            elif isinstance(allow_in_all,float):
+                if time.time() > allow_in_all:
+                    sendable = True
+            else:
+                sendable = True
+                
+            if isinstance(command_role_requirement,str):
+            #若命令有成员权限需求，则直接判断成员权限即可
+                if privillege_map[self.data['sender']['role']] < command_role_requirement:
+                    return False
         return sendable
             
     def init_permission(self,command):
