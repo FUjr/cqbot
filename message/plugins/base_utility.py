@@ -25,7 +25,7 @@ class base_utility:
                 'message' : message
             }
         self.api_queue.put([send_api,post_data])
-        return self.api_res_queue.get() 
+        return json.loads(self.api_res_queue.get())
     
 
     def add_log(self,log_level:int,log_msg):
