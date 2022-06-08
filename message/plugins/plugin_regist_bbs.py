@@ -4,7 +4,7 @@ import re
 import os
 alia = ['注册','注销账号']
 help = {
-    'brief_help' : '快速注册论坛账号',
+    'brief_help' : '快速注册/删除论坛账号',
     'more' : '快速注册，会使用你的qq邮箱作为安全邮箱，只需要输入账号密码就可以快速注册',
     'alia' : alia
 }
@@ -19,9 +19,9 @@ class plugin_regist_bbs(base_utility.base_utility):
     header = { 'api_token' : api_token}
     api_address = 'http://192.168.3.5:88/?api/'
     def main(self) -> None:
-        if self.first_message['content'] == '注册':
+        if self.first_message['message'] == '注册':
             self.regist()
-        elif self.first_message['content'] == '注销账号':
+        elif self.first_message['message'] == '注销账号':
             self.delete_user()
         
     def regist(self):
