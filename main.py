@@ -7,6 +7,7 @@ import threading
 import requests
 from queue import Queue
 import time
+import sys
 import notice
 import message
 import request
