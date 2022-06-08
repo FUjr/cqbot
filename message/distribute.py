@@ -1,6 +1,8 @@
+import time
 from .cqcode import cq_image
 from . import load_plugin
 from . import plugins
+import asyncio
 
 class distribute:
     def __init__(self,api_queue ,api_res_queue ,log_queue,dialog_livetime: int = 360 ,dialog_max_num: int = 1000):
@@ -57,6 +59,8 @@ class distribute:
             dialog = self.new_dialog(data)
             if dialog :
                 self.dialog_list[dialog_id] = dialog
+                asyncio.create_task(self.delay_callback(dialog.content_livetime,self.check_lifetime,dialog_id))
+                #c创建对话对象的生命周期检查
                 self.dialog_active_list.append(dialog_id)
                 self.log_queue.put([1,'新建了一个对话：'+ dialog_id])
             else:
@@ -69,4 +73,26 @@ class distribute:
         dialog = load_plugin.load_plugin(self.api_queue,self.api_res_queue,self.log_queue)
         #初始化对话参数
         dialog = dialog.new_dialog(data)
+        
         return dialog
+    
+    def check_lifetime(self,dialog_id : str) -> bool:
+        if dialog_id not in self.dialog_list:
+            return False
+        dialog = self.dialog_list[dialog_id]
+        #对话检查生命周期
+        time.time()
+        since_last_chat = time.time() - dialog.last_time
+        if since_last_chat > dialog.content_livetime:
+            #若超过生命周期，则删除对话
+            self.dialog_active_list.remove(dialog_id)
+            del self.dialog_list[dialog_id]
+            self.log_queue.put([1,'对话已过期：'+ dialog_id])
+        else:
+            
+            asyncio.create_task(self.delay_callback(since_last_chat,self.check_lifetime,dialog_id))
+            
+            
+    async def delay_callback(self,delay,function,*args,**kwargs):
+        await asyncio.sleep(delay)
+        function(*args,**kwargs)
