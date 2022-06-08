@@ -20,7 +20,7 @@ class plugin_regist_bbs(base_utility.base_utility):
     api_address = 'http://192.168.3.5:88/?api/'
     def main(self) -> None:
         if '注册' in self.first_message['message']:
-            self.send_back_msg('快速注册论坛账号\n如果未指定用户名，将会用你的qq号作为用户名，如果需要制定用户名，请以 username password 的格式发送\n及空格前是用户名，空格后是密码。密码需要大于5位')
+            self.send_back_msg('快速注册论坛账号，可以私聊可以群聊（非好友无法私聊）\n如果只输入一个字段，则会被设置为密码，你的qq昵称会作为用户名。如果需要指定用户名，请以 username password 的格式发送\n即空格前是用户名，空格后是密码，密码需要大于5位')
             res = yield 1
             if len(res['message'].split(' ')) == 2:
                 #第一项为账号，第二项为密码
@@ -31,10 +31,16 @@ class plugin_regist_bbs(base_utility.base_utility):
                 password = res['message'].split(' ')[0]
                 username = res['sender']['nickname']
             mail_id = str(res['user_id']) +  '@qq.com'
-            self.send_back_msg('请确认，你的账号是%s 密码是 %s.回复 确认 以外的信息都会终止执行' %(username,password))
+            password_message = self.send_back_msg('请确认，你的账号是%s 密码是 %s.回复 确认 以外的信息都会终止执行' %(username,password))
+            message_id = password_message['data']['message_id']
             res = yield 2
+            recall_api = 'delete_msg'
+            post_data = {
+                'message_id' : message_id
+            }
+            self.query_api(recall_api,post_data)
             if res['message'] != '确认':
-                self.send_back_msg('已退出')
+                self.send_back_msg('已退出,请注意撤回含有账号密码的消息')
                 return False
 
             data = {
@@ -49,7 +55,7 @@ class plugin_regist_bbs(base_utility.base_utility):
             message = res.text
             print(message)
             if re.match(rex,message):
-                self.send_back_msg('注册成功，如果忘记密码，请用你的qq邮箱找回。现在可以尝试登陆了')
+                self.send_back_msg('注册成功，现在可以尝试登陆了。请撤回含有账号密码的消息。如果忘记密码，请用你的qq邮箱找回。')
                 self.set_ava()
             else:
                 self.send_back_msg(res.text)
