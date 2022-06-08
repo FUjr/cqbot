@@ -2,7 +2,7 @@ import requests
 from . import base_utility
 import re
 import os
-alia = ['注册']
+alia = ['注册','注销账号']
 help = {
     'brief_help' : '快速注册论坛账号',
     'more' : '快速注册，会使用你的qq邮箱作为安全邮箱，只需要输入账号密码就可以快速注册',
@@ -19,6 +19,12 @@ class plugin_regist_bbs(base_utility.base_utility):
     header = { 'api_token' : api_token}
     api_address = 'http://192.168.3.5:88/?api/'
     def main(self) -> None:
+        if self.first_message['content'] == '注册':
+            self.regist()
+        elif self.first_message['content'] == '注销账号':
+            self.delete_user()
+        
+    def regist(self):
         self.send_back_msg('快速注册论坛账号\n如果未指定用户名，将会用你的qq号作为用户名，如果需要制定用户名，请以 username password 的格式发送\n及空格前是用户名，空格后是密码。密码需要大于5位')
         res = yield 1
         if len(res['message'].split(' ')) == 2:
@@ -82,3 +88,21 @@ class plugin_regist_bbs(base_utility.base_utility):
         }
         res = requests.post(get_uid_api,data=data)
         return int(res.text)
+    
+    def delete_user(self) -> None:
+        self.send_back_msg('确认删除账号吗？此操作无法撤销！回复 确认 以外的都会中止注销')
+        res = yield 1
+        if res['message'] != '确认':  
+            email = str(self.first_message['user_id']) + '@qq.com'
+            data = {
+                'api_token' : self.api_token,
+                'mail' : email
+            }
+            delete_user_api = 'http://192.168.3.5:88/?api/delete_user.html'
+            res= requests.post(delete_user_api,data=data)
+            if res.text == 1:
+                self.send_back_msg('已删除账号')
+            else:
+                self.send_back_msg('删除请求非法，可能是未注册或者已删除')
+        else:
+            self.send_back_msg('已中止注销')
