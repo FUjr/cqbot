@@ -32,13 +32,13 @@ class plugin_regist_bbs(base_utility.base_utility):
                 username = res['sender']['nickname']
             mail_id = str(res['user_id']) +  '@qq.com'
             password_message = self.send_back_msg('请确认，你的账号是%s 密码是 %s.回复 确认 以外的信息都会终止执行' %(username,password))
-            print(password_message)
+            password_message['data']['message_id']
             res = yield 2
             recall_api = 'delete_msg'
             post_data = {
-                'message_id' : 'message_id'
+                'message_id' : message_id
             }
-            #self.query_api(recall_api,post_data)
+            self.query_api(recall_api,post_data)
             if res['message'] != '确认':
                 self.send_back_msg('已退出,请注意撤回含有账号密码的消息')
                 return False
