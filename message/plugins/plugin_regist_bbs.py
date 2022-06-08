@@ -2,6 +2,7 @@ import requests
 from . import base_utility
 import re
 import os
+import asyncio
 alia = ['注册','注销账号']
 help = {
     'brief_help' : '快速注册/删除论坛账号',
@@ -31,14 +32,10 @@ class plugin_regist_bbs(base_utility.base_utility):
                 password = res['message'].split(' ')[0]
                 username = res['sender']['nickname']
             mail_id = str(res['user_id']) +  '@qq.com'
-            password_message = self.send_back_msg('请确认，你的账号是%s 密码是 %s.回复 确认 以外的信息都会终止执行.\n 请在2分钟内回复，本消息在收到回复后会自动撤回' %(username,password))
+            password_message = self.send_back_msg('请确认，你的账号是%s 密码是 %s.回复 确认 以外的信息都会终止执行.\n 本消息在15秒后会自动撤回' %(username,password))
             message_id = password_message['data']['message_id']
+            asyncio.create_task(self.delay_recall_message(message_id))
             res = yield 2
-            recall_api = 'delete_msg'
-            post_data = {
-                'message_id' : message_id
-            }
-            self.query_api(recall_api,post_data)
             if res['message'] != '确认':
                 self.send_back_msg('已退出,请注意撤回含有账号密码的消息')
                 return False
@@ -107,4 +104,14 @@ class plugin_regist_bbs(base_utility.base_utility):
         }
         res = requests.post(get_uid_api,data=data)
         return int(res.text)
+    
+    async def delay_recall_message(self,message_id) -> None:
+        await asyncio.sleep(15)
+        recall_api = 'delete_msg'
+        post_data = {
+            'message_id' : message_id
+        }
+        self.query_api(recall_api,post_data)
+        self.send_back_msg('您的帐号密码已撤回')
+        
     
