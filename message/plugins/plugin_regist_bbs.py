@@ -56,7 +56,7 @@ class plugin_regist_bbs(base_utility.base_utility):
         elif '注销账号' in self.first_message['message']:
             self.send_back_msg('确认删除账号吗？此操作无法撤销！回复 确认 以外的都会中止注销')
             res = yield 1
-            if res['message'] != '确认':  
+            if res['message'] == '确认':  
                 email = str(self.first_message['user_id']) + '@qq.com'
                 data = {
                     'api_token' : self.api_token,
