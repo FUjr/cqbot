@@ -145,12 +145,11 @@ class load_plugin():
                     sendable = not sendable
                     
             #对all-user的特殊名单，若其在名单且有未过期时间，则直接获得权限
-            if isinstance(allow_in_all,NoneType):
-                pass
-            elif isinstance(allow_in_all,float):
+
+            if isinstance(allow_in_all,float):
                 if time.time() > allow_in_all:
                     sendable = True
-            else:
+            elif isinstance(allow_in_all,str):
                 sendable = True
                 
             if isinstance(command_role_requirement,str):
