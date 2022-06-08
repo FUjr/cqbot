@@ -64,7 +64,7 @@ class plugin_regist_bbs(base_utility.base_utility):
                 }
                 delete_user_api = 'http://192.168.3.5:88/?api/delete_user.html'
                 res= requests.post(delete_user_api,data=data)
-                if res.text == 1:
+                if res.text == '1':
                     self.send_back_msg('已删除账号')
                 else:
                     self.send_back_msg('删除请求非法，可能是未注册或者已删除')
