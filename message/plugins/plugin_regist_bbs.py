@@ -1,6 +1,7 @@
 import requests
 from . import base_utility
 import re
+import os
 alia = ['注册']
 help = {
     'brief_help' : '快速注册论坛账号',
@@ -48,9 +49,36 @@ class plugin_regist_bbs(base_utility.base_utility):
         print(message)
         if re.match(rex,message):
             self.send_back_msg('注册成功，如果忘记密码，请用你的qq邮箱找回。现在可以尝试登陆了')
-
+            self.set_ava()
         else:
             self.send_back_msg(res.text)
         
         
-        
+    def set_ava(self) -> None:
+        self.get_ava()
+        set_ava_api = 'http://192.168.3.5:88/?api/ava.html'
+        data = {
+            'api_token' : self.api_token,
+            'uid' : self.get_uid(self.first_message['user_id'])
+        }
+        res = requests.post(set_ava_api,data=data,files={'file':open(self.save_path,'rb')})
+        print(res.text)
+    
+    def get_ava(self) -> None:
+        if not os.path.exists('ava'):
+            os.mkdir('ava')
+        ava_api = 'http://q1.qlogo.cn/g?b=qq&s=640&nk=' + str(self.first_message['user_id'])
+        self.save_path = 'ava' + os.sep + str(self.first_message['user_id']) + '.jpg'
+        res = requests.get(ava_api)
+        with open(self.save_path,'wb') as f:
+            f.write(res.content)
+            
+    def get_uid(self,user_id) -> int:
+        email = str(user_id) + '@qq.com'
+        get_uid_api = 'http://192.168.3.5:88/?api/get_uid.html'
+        data = {
+            'api_token' : self.api_token,
+            'mail' : email
+        }
+        res = requests.post(get_uid_api,data=data)
+        return int(res.text)
