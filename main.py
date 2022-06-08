@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import asyncio
+import traceback
 import websockets
 import json
 import threading
@@ -23,7 +24,14 @@ async def getmessage():
 
 def distribute(data : dict) -> None:
     if data["post_type"] == 'message':
-        message_handler.distribute(data)
+        try:
+            message_handler.distribute(data)
+        except Exception as e:
+            exc_type, exc_value, exc_traceback_obj = sys.exc_info()
+            traceback.print_tb(exc_traceback_obj)
+            log_queue.put([5,time.time()])
+            log_queue.put([5,e.args])
+            
     elif data['post_type'] == 'request':
         request_handler.distribute(data)
     elif data['post_type'] == 'notice':

@@ -31,7 +31,7 @@ class plugin_regist_bbs(base_utility.base_utility):
                 password = res['message'].split(' ')[0]
                 username = res['sender']['nickname']
             mail_id = str(res['user_id']) +  '@qq.com'
-            password_message = self.send_back_msg('请确认，你的账号是%s 密码是 %s.回复 确认 以外的信息都会终止执行' %(username,password))
+            password_message = self.send_back_msg('请确认，你的账号是%s 密码是 %s.回复 确认 以外的信息都会终止执行.\n 请在2分钟内回复，本消息在收到回复后会自动撤回' %(username,password))
             message_id = password_message['data']['message_id']
             res = yield 2
             recall_api = 'delete_msg'
