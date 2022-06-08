@@ -19,7 +19,7 @@ class plugin_regist_bbs(base_utility.base_utility):
     header = { 'api_token' : api_token}
     api_address = 'http://192.168.3.5:88/?api/'
     def main(self) -> None:
-        if self.first_message['message'] == '注册':
+        if '注册' in self.first_message['message']:
             self.send_back_msg('快速注册论坛账号\n如果未指定用户名，将会用你的qq号作为用户名，如果需要制定用户名，请以 username password 的格式发送\n及空格前是用户名，空格后是密码。密码需要大于5位')
             res = yield 1
             if len(res['message'].split(' ')) == 2:
@@ -53,7 +53,7 @@ class plugin_regist_bbs(base_utility.base_utility):
                 self.set_ava()
             else:
                 self.send_back_msg(res.text)
-        elif self.first_message['message'] == '注销账号':
+        elif '注销账号' in self.first_message['message']:
             self.send_back_msg('确认删除账号吗？此操作无法撤销！回复 确认 以外的都会中止注销')
             res = yield 1
             if res['message'] != '确认':  
