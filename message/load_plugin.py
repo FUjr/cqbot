@@ -1,4 +1,3 @@
-from types import NoneType
 from . import plugins
 from . import cqcode
 from importlib import reload
