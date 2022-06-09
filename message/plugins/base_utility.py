@@ -1,4 +1,3 @@
-import abc
 import json
 class base_utility:
     def __init__(self,first_message,api_queue,api_res_queue,log_queue) -> None:
@@ -7,6 +6,9 @@ class base_utility:
         self.log_queue = log_queue
         self.first_message = first_message
 
+    
+
+        
     def send_back_msg(self,message):
         if self.first_message['message_type'] == 'private':
             send_api = 'send_msg'

@@ -1,5 +1,6 @@
 import sys
 from . import base_utility
+import asyncio
 alia = ['demo']
 
 permission = {
@@ -17,6 +18,7 @@ help = {
 class plugin_demo(base_utility.base_utility):
 
     def main(self) -> None:
+        asyncio.create_task(self.send_test())
         res = yield 1
         self.send_back_msg(res['message'])
         res = yield 2
@@ -24,3 +26,6 @@ class plugin_demo(base_utility.base_utility):
         res = yield 3
         self.send_back_msg(res['message'])
 
+    async def send_test(self):
+        await asyncio.sleep(10)
+        self.send_back_msg('test')

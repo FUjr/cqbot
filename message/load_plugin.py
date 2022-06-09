@@ -11,7 +11,7 @@ class load_plugin():
     help_dict = {}
     command_dict = {}
     hash_dict = {}
-    def __init__(self, api_queue, api_res_queue, log_queue,content_livetime: int = 360):
+    def __init__(self, api_queue, api_res_queue, log_queue,content_livetime: int = 300):
         self.content_livetime = content_livetime
         self.api_queue = api_queue
         self.api_res_queue  = api_res_queue
@@ -63,6 +63,7 @@ class load_plugin():
         return False
 
     def handle_content(self,data):
+        self.last_time = time.time()
         raw_message = data['raw_message']
         if raw_message.startswith('退出'):
             self.content = False

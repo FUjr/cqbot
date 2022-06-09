@@ -2,6 +2,7 @@ import time
 from .cqcode import cq_image
 from . import load_plugin
 from . import plugins
+from . import hook
 import asyncio
 
 class distribute:
@@ -15,7 +16,7 @@ class distribute:
         #最后活跃的聊天
         self.dialog_livetime = dialog_livetime
         self.dialog_max_num = dialog_max_num
-        self.hook = plugins.hook.hook(self.api_queue,self.api_res_queue,self.log_queue)
+        self.hook = hook.hook(self.api_queue,self.api_res_queue,self.log_queue)
 
     def distribute(self,data : dict) -> None:
         
