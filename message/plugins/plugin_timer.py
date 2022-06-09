@@ -97,7 +97,7 @@ class plugin_timer(base_utility.base_utility):
             if isinstance(wait_time,int):
                 asyncio.create_task(self.delay_callback(wait_time,self.send_back_msg,msg))
                 msg_id = self.send_back_msg('已设置定时%s秒 后发送%s' %(wait_time,msg))
-                self.delay_recall_message(msg_id['data']['message_id'])
+                asyncio.create_task(self.delay_recall_message(msg_id['data']['message_id']))
             else:
                 self.send_back_msg('请输入未来的时间或者正确的格式 %s' %support_form)
         except Exception as e:
