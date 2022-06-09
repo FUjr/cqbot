@@ -84,8 +84,9 @@ class plugin_timer(base_utility.base_utility):
         args = self.cmd_parse(require_cmd_sum,cmd_format)
         try:
             wait_time = self.parse_time(args[1])
-            if isinstance(wait_time,float):
+            if isinstance(wait_time,float) or isinstance(wait_time,int):
                 asyncio.create_task(self.delay_callback(args[0],self.send_back_msg,args[2]))
+                self.send_back_msg('已设置定时%s秒 后发送%s' %(wait_time,args[1])
             else:
                 self.send_back_msg('请输入未来的时间或者正确的格式 %s' %support_form)
         except:
