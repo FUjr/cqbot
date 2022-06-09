@@ -22,7 +22,7 @@ from . import base_utility
 class plugin_timer(base_utility.base_utility):
     def cmd_parse(self,requrie_cmd_sum,cmd_format):
         splited_cmd = self.first_message['message'].split(' ')
-        if len(splited_cmd) != requrie_cmd_sum:
+        if len(splited_cmd) < requrie_cmd_sum:
             self.send_back_msg('命令格式：%s' %cmd_format)
             return False
         else:
@@ -54,12 +54,12 @@ class plugin_timer(base_utility.base_utility):
                 time_list = re.findall(rex,time_arg)
                 if len(time_list) != 1:
                     return False
-                return time_list[0]*60
+                return int(time_list[0])*60
             elif 'h' in time_arg:
                 time_list = re.findall(rex,time_arg)
                 if len(time_list) != 1:
                     return False
-                return time_list[0]*60*60
+                return int(time_list[0])*60*60
             elif ':' in time_arg:
                 time_arg = m_year + '-' + m_mon + '-' + m_mday + '.' + time_arg 
 
@@ -91,13 +91,24 @@ class plugin_timer(base_utility.base_utility):
         cmd_format = '/定时消息 定时 消息'
         require_cmd_sum = 3
         args = self.cmd_parse(require_cmd_sum,cmd_format)
+        msg = ' '.join(args[2:])
         try:
             wait_time = int(self.parse_time(args[1]))
             if isinstance(wait_time,int):
-                asyncio.create_task(self.delay_callback(wait_time,self.send_back_msg,args[2]))
-                self.send_back_msg('已设置定时%s秒 后发送%s' %(wait_time,args[2]))
+                asyncio.create_task(self.delay_callback(wait_time,self.send_back_msg,msg))
+                msg_id = self.send_back_msg('已设置定时%s秒 后发送%s' %(wait_time,msg))
+                self.delay_recall_message(msg_id['data']['message_id'])
+                msg_id = 
             else:
                 self.send_back_msg('请输入未来的时间或者正确的格式 %s' %support_form)
         except Exception as e:
             self.add_log(5,e.args)
             self.send_back_msg('请输入正确的格式 %s' %support_form)
+            
+    async def delay_recall_message(self,message_id) -> None:
+        await asyncio.sleep(5)
+        recall_api = 'delete_msg'
+        post_data = {
+            'message_id' : message_id
+        }
+        self.query_api(recall_api,post_data)
