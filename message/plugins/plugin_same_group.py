@@ -56,10 +56,10 @@ class plugin_same_group(base_utility.base_utility):
                     first_in_flag = '先进的隔壁群'
                     first_in += 1
                 buffer += str(id) + ' ' +first_in_flag + '\n'
-                if len(buffer > 150 and detail_flag == 1):
+                if len(buffer) > 150 and detail_flag == 1:
                     self.send_back_msg(buffer)
                     buffer = ''
-        if len(buffer > 0 and detail_flag == 1):
+        if len(buffer) > 0 and detail_flag == 1:
                     self.send_back_msg(buffer)
                     buffer = ''
         msg = "本群中出了" + str(count) + "个" + ' '.join(group_name_list) + "的内鬼，" + "其中" + str(first_in) + "个先进的隔壁群"
