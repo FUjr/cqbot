@@ -17,8 +17,11 @@ permission = {
 }
 class plugin_same_group(base_utility.base_utility):
     def get_same_people(self,group_list):
-        if 'detail' in self.first_message['message'] :
-            detail_flag = 1
+        try:
+            if 'detail' in self.first_message['message'] :
+                detail_flag = 1
+        except:
+            pass
         count = 0
         group_member_api = 'get_group_member_list'
         group_info_api = 'get_group_info'
@@ -52,7 +55,7 @@ class plugin_same_group(base_utility.base_utility):
                 if other_group_jointime[id] < jointime[id]:
                     first_in_flag = '先进的隔壁群'
                     first_in += 1
-                buffer += id + first_in_flag + '\n'
+                buffer += id + ' ' +first_in_flag + '\n'
                 if len(buffer > 150 and detail_flag == 1):
                     self.send_back_msg(buffer)
                     buffer = ''

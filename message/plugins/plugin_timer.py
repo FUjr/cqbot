@@ -16,8 +16,13 @@ help = {
     'alia' : alia
 }
 
+group_scheduled_msg = {
+    
+} #以groupid_userid为键，预计发送时间和内容为值
 
-
+private_scheduled_msg = {
+    
+} #以user_id为键，预计发送时间和内容为值
 from . import base_utility
 class plugin_timer(base_utility.base_utility):
     def cmd_parse(self,requrie_cmd_sum,cmd_format):
@@ -78,14 +83,11 @@ class plugin_timer(base_utility.base_utility):
             return False
         else:
             return gap_time
-        
-    async def delay_callback(self,delay,function,*args,**kwargs):
-        await asyncio.sleep(delay)
-        function(*args,**kwargs)
-    
+
     def run(self,data):
         self.main()
         return False
+    
     def main(self):
         support_form = '[19：00] [20:42] [19点29分] [6-10.18:20] [2022-6-9.18:15] [3s/m/h]'
         cmd_format = '/定时消息 定时 消息'
@@ -111,3 +113,18 @@ class plugin_timer(base_utility.base_utility):
             'message_id' : message_id
         }
         self.query_api(recall_api,post_data)
+        
+    def query_my_scheduled_msg(self):
+        my_scheduled_list = []
+        for i in list(group_scheduled_msg.keys()):
+            each_user_id = i.split('_')[1]
+            if each_user_id == str(self.first_message['user_id']):
+                my_scheduled_list.append(i)
+        for i in list(private_scheduled_msg.keys()):
+            each_user_id = i
+            if str(each_user_id) == str(self.first_message['user_id']):
+                my_scheduled_list.append(i)
+        return i
+    
+    def query_this_group_msg(self):
+        
