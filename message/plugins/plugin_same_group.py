@@ -17,6 +17,8 @@ permission = {
 }
 class plugin_same_group(base_utility.base_utility):
     def get_same_people(self,group_list):
+        if 'detail' in self.first_message['message'] :
+            detail_flag = 1
         count = 0
         group_member_api = 'get_group_member_list'
         group_info_api = 'get_group_info'
@@ -42,12 +44,23 @@ class plugin_same_group(base_utility.base_utility):
                 other_group_jointime[member_info['user_id']] = member_info['join_time']
                 if member_id not in other_membe_set:
                     other_membe_set.add(member_id) 
+        buffer = ''
         for id in group_member_set:
             if id in other_membe_set:
                 count +=1
+                first_in_flag = '先进的本群'
                 if other_group_jointime[id] < jointime[id]:
+                    first_in_flag = '先进的隔壁群'
                     first_in += 1
+                buffer += id + first_in_flag + '\n'
+                if len(buffer > 150 and detail_flag == 1):
+                    self.send_back_msg(buffer)
+                    buffer = ''
+        if len(buffer > 0 and detail_flag == 1):
+                    self.send_back_msg(buffer)
+                    buffer = ''
         msg = "本群中出了" + str(count) + "个" + ' '.join(group_name_list) + "的内鬼，" + "其中" + str(first_in) + "个先进的隔壁群"
+        
         return msg
                 
                 
