@@ -55,7 +55,7 @@ class plugin_same_group(base_utility.base_utility):
                 if other_group_jointime[id] < jointime[id]:
                     first_in_flag = '先进的隔壁群'
                     first_in += 1
-                buffer += id + ' ' +first_in_flag + '\n'
+                buffer += str(id) + ' ' +first_in_flag + '\n'
                 if len(buffer > 150 and detail_flag == 1):
                     self.send_back_msg(buffer)
                     buffer = ''
