@@ -17,6 +17,7 @@ permission = {
 }
 class plugin_same_group(base_utility.base_utility):
     def get_same_people(self,group_list):
+        detail_flag = 0
         try:
             if 'detail' in self.first_message['message'] :
                 detail_flag = 1
