@@ -1,4 +1,4 @@
-import json
+import time
 import re
 from . import base_utility
 alia = ['真假新生']
@@ -66,4 +66,6 @@ class plugin_fakefresh(base_utility.base_utility):
     
     def attend_group_time(self,qq) -> str:
         res = self.query_api('get_group_member_info',{'group_id':self.first_message['group_id'],'user_id':qq})
-        return '进本群时间是%s' % res['data']['join_time']
+        timestamp =   res['data']['join_time']
+        dt = time.localtime(timestamp)
+        return '进本群时间是%s' % time.strftime("%Y-%m-%d %H:%M:%S",dt)
