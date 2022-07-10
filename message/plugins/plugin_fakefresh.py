@@ -57,7 +57,7 @@ class plugin_fakefresh(base_utility.base_utility):
         same_people_buffer = ''
         res = self.query_api('get_group_member_list',{'group_id':group_id})
         for i in res['data']:
-            if str(i['user_id']) == str(qq):
+            if i['user_id'] == str(qq):
                 same_people_buffer += '还在%s群里\n' % i['group_name']
         return same_people_buffer
     
