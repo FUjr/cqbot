@@ -56,10 +56,9 @@ class plugin_fakefresh(base_utility.base_utility):
     def get_same_people(self,group_id,qq) -> str:
         same_people_buffer = ''
         res = self.query_api('get_group_member_list',{'group_id':group_id})
-        for i in res['data']:
-            if i['user_id'] == qq:
-                same_people_buffer += '%s还在%s群里\n' % (i['nickname'],i['group_name'])
-                break
+        if qq in res['data']:
+                same_people_buffer += '还在%s群里\n' %i['group_name']
+
         return same_people_buffer
     
     def attend_group_time(self,qq) -> str:
