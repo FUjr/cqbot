@@ -67,8 +67,9 @@ class plugin_menu(base_utility.base_utility):
     
     def permission_deny(self,key):
         if self.check_permission(key):
-            print('%s permission deny' % key)
+            print('%s permission allowed' % key)
             return False
+        print('%s permission deny' % key)
         return True
         
         
