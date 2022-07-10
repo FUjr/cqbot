@@ -63,4 +63,4 @@ class plugin_fakefresh(base_utility.base_utility):
     
     def attend_group_time(self,qq) -> str:
         res = self.query_api('get_group_member_info',{'group_id':self.first_message['group_id'],'user_id':qq})
-        return '进%s群时间是%s' % (res['data']['group_name'],res['data']['join_time'])
+        return '进%s群时间是%s' % res['data']['group_name'],res['data']['join_time']
