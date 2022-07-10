@@ -20,9 +20,9 @@ class plugin_demo(base_utility.base_utility):
     def main(self) -> None:
         asyncio.create_task(self.send_test())
         res = yield 1
+        print(res)
         self.send_back_msg(res['message'])
-        self.add_log(1,res)
-        self.send_back_msg(res)
+
         res = yield 2
         self.send_back_msg(res['message'])
         res = yield 3
