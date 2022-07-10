@@ -29,7 +29,6 @@ class plugin_fakefresh(base_utility.base_utility):
     def get_fakefresh_info(self,qq) -> False:
         same_people_buffer = ''
         group_list = self.get_group_list()
-        self.send_back_msg('step 1 done')
         for i in group_list:
             res = self.get_same_people(i,qq)
             if res != False:
@@ -39,9 +38,7 @@ class plugin_fakefresh(base_utility.base_utility):
             self.send_back_msg(self.attend_group_time(qq))
             return False
         else:
-            self.send_back_msg('step 2 done')
             self.at_info = self.get_at_info(qq)
-            self.send_back_msg('step 3 done')
             self.send_back_msg(self.at_info + '\n' + self.attend_group_time(qq) + '\n' + same_people_buffer)
             return False
     
@@ -65,6 +62,5 @@ class plugin_fakefresh(base_utility.base_utility):
         return same_people_buffer
     
     def attend_group_time(self,qq) -> str:
-        self.send_back_msg('step 4 done')
         res = self.query_api('get_group_member_info',{'group_id':self.first_message['group_id'],'user_id':qq})
-        return '进群时间是%s' % (self.at_info,res['data']['group_name'],res['data']['join_time'])
+        return '进%s群时间是%s' % (res['data']['group_name'],res['data']['join_time'])
