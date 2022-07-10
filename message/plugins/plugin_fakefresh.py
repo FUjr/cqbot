@@ -68,4 +68,5 @@ class plugin_fakefresh(base_utility.base_utility):
         res = self.query_api('get_group_member_info',{'group_id':self.first_message['group_id'],'user_id':qq})
         timestamp =   res['data']['join_time']
         dt = time.localtime(timestamp)
+        print(dt)
         return '进本群时间是%s' % time.strftime("%Y-%m-%d %H:%M:%S",dt)
