@@ -29,6 +29,7 @@ class plugin_fakefresh(base_utility.base_utility):
     def get_fakefresh_info(self,qq) -> False:
         same_people_buffer = ''
         group_list = self.get_group_list()
+        self.send_back_msg('step 1 done')
         for i in group_list:
             res = self.get_same_people(i,qq)
             if res != False:
@@ -38,6 +39,7 @@ class plugin_fakefresh(base_utility.base_utility):
             self.send_back_msg(self.attend_group_time(qq))
             return False
         else:
+            self.send_back_msg('step 2 done')
             self.at_info = self.get_at_info(qq)
             
             self.send_back_msg(self.at_info + '\n' + self.attend_group_time(qq) + '\n' + same_people_buffer)
