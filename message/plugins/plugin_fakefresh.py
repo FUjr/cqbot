@@ -28,9 +28,10 @@ class plugin_fakefresh(base_utility.base_utility):
         
     def get_fakefresh_info(self,qq) -> False:
         same_people_buffer = ''
-        group_list = self.get_group_list()
+        group_list,group_name_list = self.get_group_list()
         for i in group_list:
-            res = self.get_same_people(i,qq)
+            group_name = group_name_list[group_list.index(i)]
+            res = self.get_same_people(i,group_name,qq)
             if res != '':
                 same_people_buffer += res
                 same_people_buffer += '\n'
@@ -48,17 +49,19 @@ class plugin_fakefresh(base_utility.base_utility):
     
     def get_group_list(self) -> list:
         group_list = []
+        group_name = []
         group_list_res = self.query_api('get_group_list',{})
         for i in group_list_res['data']:
             group_list.append(i['group_id'])
-        return group_list
+            group_name.append(i['group_name'])
+        return group_list,group_name
     
-    def get_same_people(self,group_id,qq) -> str:
+    def get_same_people(self,group_id,group_name,qq) -> str:
         same_people_buffer = ''
         res = self.query_api('get_group_member_list',{'group_id':group_id})
         for i in res['data']:
             if str(i['user_id']) == qq:
-                same_people_buffer += '还在%s群里\n' % (i['group_name'])
+                same_people_buffer += '还在%s群里\n' % (group_name)
         return same_people_buffer
     
     def attend_group_time(self,qq) -> str:
