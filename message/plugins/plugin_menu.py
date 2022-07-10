@@ -51,7 +51,7 @@ class plugin_menu(base_utility.base_utility):
                     help_info = __main__.message.load_plugin.load_plugin.help_dict[key][index]
                     cmd_help = '命令：' + alia_list + '\n帮助：' + help_info
                     msg += cmd_help
-                    msg += '\n'
+                    msg += '\n\n'
         else:
             if cmd in __main__.message.plugins.command_dict:
                 cmd = __main__.message.plugins.command_dict[cmd]
