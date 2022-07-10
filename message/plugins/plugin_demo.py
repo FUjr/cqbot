@@ -21,6 +21,7 @@ class plugin_demo(base_utility.base_utility):
         asyncio.create_task(self.send_test())
         res = yield 1
         self.send_back_msg(res['message'])
+        self.add_log(self.first_message)
         res = yield 2
         self.send_back_msg(res['message'])
         res = yield 3
