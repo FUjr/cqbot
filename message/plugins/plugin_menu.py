@@ -39,10 +39,10 @@ class plugin_menu(base_utility.base_utility):
         if cmd == 'all_cmd':
             print(__main__.message.load_plugin.load_plugin.help_dict)
             msg = """
-            欢迎使用本垃圾机器人
-            1、本机器人不支持回复临时会话，加好友验证消息为 “机器人” 即可自动通过
-            2、触发命令需要在关键词前增加‘/’
-            3、机器人开源地址 https://www.github.com/fujr/cqbot,欢迎来提交插件
+欢迎使用本垃圾机器人
+    1、本机器人不支持回复临时会话，加好友验证消息为 “机器人” 即可自动通过
+    2、触发命令需要在关键词前增加‘/’
+    3、机器人开源地址 https://www.github.com/fujr/cqbot,欢迎来提交插件
             """
             
             for key in __main__.message.load_plugin.load_plugin.help_dict :
@@ -67,6 +67,7 @@ class plugin_menu(base_utility.base_utility):
     
     def permission_deny(self,key):
         if self.check_permission(key):
+            print('%s permission deny' % key)
             return False
         return True
         
