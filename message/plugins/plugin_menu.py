@@ -43,16 +43,15 @@ class plugin_menu(base_utility.base_utility):
     1、本机器人不支持回复临时会话，加好友验证消息为 “机器人” 即可自动通过
     2、触发命令需要在关键词前增加‘/’
     3、机器人开源地址 https://www.github.com/fujr/cqbot,欢迎来提交插件
-
 """
             
             for key in __main__.message.load_plugin.load_plugin.help_dict :
                 if (self.check_permission(key)):
                     alia_list = ' '.join(__main__.message.load_plugin.load_plugin.help_dict[key]['alia'])
                     help_info = __main__.message.load_plugin.load_plugin.help_dict[key][index]
-                    cmd_help = '命令：' + alia_list + '\n帮助：' + help_info
+                    cmd_help = '\n命令：' + alia_list + '\n帮助：' + help_info
                     msg += cmd_help
-                    msg += '\n\n'
+                    msg += '\n'
         else:
             if cmd in __main__.message.plugins.command_dict:
                 cmd = __main__.message.plugins.command_dict[cmd]
