@@ -46,13 +46,12 @@ class plugin_menu(base_utility.base_utility):
             """
             
             for key in __main__.message.load_plugin.load_plugin.help_dict :
-                if (self.permission_deny(key)):
-                    pass
-                alia_list = ' '.join(__main__.message.load_plugin.load_plugin.help_dict[key]['alia'])
-                help_info = __main__.message.load_plugin.load_plugin.help_dict[key][index]
-                cmd_help = '命令：' + alia_list + '\n帮助：' + help_info
-                msg += cmd_help
-                msg += '\n'
+                if (self.check_permission(key)):
+                    alia_list = ' '.join(__main__.message.load_plugin.load_plugin.help_dict[key]['alia'])
+                    help_info = __main__.message.load_plugin.load_plugin.help_dict[key][index]
+                    cmd_help = '命令：' + alia_list + '\n帮助：' + help_info
+                    msg += cmd_help
+                    msg += '\n'
         else:
             if cmd in __main__.message.plugins.command_dict:
                 cmd = __main__.message.plugins.command_dict[cmd]
@@ -65,12 +64,7 @@ class plugin_menu(base_utility.base_utility):
                 msg = 'command not found'
         return msg
     
-    def permission_deny(self,key):
-        if self.check_permission(key):
-            print('%s permission allowed' % key)
-            return False
-        print('%s permission deny' % key)
-        return True
+
         
         
     def check_permission(self,command):
