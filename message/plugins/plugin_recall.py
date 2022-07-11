@@ -33,5 +33,7 @@ class plugin_recall(base_utility.base_utility):
             if res['status'] == 'ok':
                 self.send_back_msg('消息已撤回')
             elif res['status'] == 'failed':
+                if res['wording'] == 'recall error: 1001 msg: No message meets the requirements':
+                    self.send_back_msg('里在干婶莫？没有管理员权限撤回成员消息？')
                 self.send_back_msg(res['wording'])
             return False
