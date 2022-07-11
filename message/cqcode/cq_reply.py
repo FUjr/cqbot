@@ -8,10 +8,11 @@ class cq_reply:
         
     def run(self,data):
         #命令前置功能
-        rex = r'(\/.*) '
-        command_list = re.findall(rex,data['message'])
+        rex = r'(\/.*)'
+        command_list = re.findall(rex,data['raw_message'])
         if len(command_list) > 0:
             command = command_list[0]
-            data['message'] = data['message'].replace(command, '')
-            data['message'] = command + ' ' + data['message']
+            data['raw_message'] = data['raw_message'].replace(command, '')
+            data['raw_message'] = command + ' ' + data['raw_message']
+            print(data)
         return data
