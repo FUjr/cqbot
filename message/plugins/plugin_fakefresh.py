@@ -27,6 +27,13 @@ class plugin_fakefresh(base_utility.base_utility):
             return False
         
     def get_fakefresh_info(self,qq) -> False:
+        if qq == self.first_message['self_id']:
+            self.send_back_msg('这么可爱的机器人，怎么可能不是新生呢，快来调戏我')
+            return False
+        elif qq == '1194436766':
+            self.send_back_msg('这么可爱的汤姆，怎么可能不是新生呢')
+            return False
+
         same_people_buffer = ''
         group_list,group_name_list = self.get_group_list()
         for i in group_list:
