@@ -25,5 +25,8 @@ class cq_image:
             log_queue.put([1,api_res.get()])
         else:
             pass
+    
+    def run(self,data):
+        return data
 
     
