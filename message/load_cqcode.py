@@ -26,4 +26,5 @@ class load_cqcode():
             __import__(module_name)
             handler = getattr(sys.modules[__name__.replace(__class__.__name__,'cqcode.') + cqcode.cqcode_dict[cqcode_type]], cqcode.cqcode_dict[cqcode_type])(data,self.api_queue,self.api_res_queue,self.log_queue)
             self.log_queue.put([1,'loaded: ' + cqcode.cqcode_dict[cqcode_type]])
-            self.content = handler.run(data)
+            data = handler.run(data)
+        return data
