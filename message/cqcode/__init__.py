@@ -1,5 +1,4 @@
 cq_code_handler = {
-    '[CQ:image' : 'cq_image',
-    '[CQ:reply' : 'cq_reply',
-    '[CQ:json' : 'cq_json',
+    'image' : 'cq_image',
+    'reply' : 'cq_reply',
 }
