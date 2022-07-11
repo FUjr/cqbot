@@ -1,5 +1,5 @@
 import time
-from .cqcode import cq_image
+from . import load_cqcode
 from . import load_plugin
 from . import plugins
 from . import hook
@@ -17,20 +17,18 @@ class distribute:
         self.dialog_livetime = dialog_livetime
         self.dialog_max_num = dialog_max_num
         self.hook = hook.hook(self.api_queue,self.api_res_queue,self.log_queue)
+        self.cqcode = load_cqcode.load_cqcode(self.api_queue,self.api_res_queue,self.log_queue)
 
     def distribute(self,data : dict) -> None:
-        
-        
         if_continue = self.hook.run(data)
         if if_continue:
             return 0
         else:
             pass
 
-        
-        if data['message'].startswith('[CQ:image'):
-            cq_image.cq_image(data,self.api_queue,self.api_res_queue,self.log_queue)
         #处理cq码
+        if '[CQ:' in data['message']:
+            data = self.cqcode.distribute_cqcode(data)        
         if data['message_type'] == 'private':
             user_id = data['user_id']
             dialog_id = 'private_' + str(user_id)
