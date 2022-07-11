@@ -27,7 +27,7 @@ class plugin_fakefresh(base_utility.base_utility):
             return False
         
     def get_fakefresh_info(self,qq) -> False:
-        if qq == self.first_message['self_id']:
+        if qq == str(self.first_message['self_id']):
             self.send_back_msg('这么可爱的机器人，怎么可能不是新生呢，快来调戏我')
             return False
         elif qq == '1194436766':
