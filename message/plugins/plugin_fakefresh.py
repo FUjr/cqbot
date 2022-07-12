@@ -4,7 +4,7 @@ from tokenize import group
 from . import base_utility
 alia = ['真假新生','内鬼pro']
 help = {
-    'brief_help' : '发送 /真假新生 @要查的人 就可以知道有几个人是真的新生',
+    'brief_help' : '发送 /真假新生 @要查的人 就可以知道有几个人是真的新生,注意命令和艾特中间要有空格',
     'more' : '发送 /真假新生 @要查的人 机器人会告诉你，xxx还进了哪些群（和机器人的共同群）、进群时间',
     'alia' : alia
 }
@@ -26,7 +26,7 @@ class plugin_fakefresh(base_utility.base_utility):
             self.check_all()
             return False
         if len(check_qq) == 0:
-            self.send_back_msg('请发送 /真假新生 @要查的人')
+            self.send_back_msg('请发送 %s @要查的人,注意命令和艾特之间要有空格，支持艾特多人',self.first_message['message'].split(' ')[0])
             return False
         else :
             for i in check_qq:
