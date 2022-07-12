@@ -2,7 +2,7 @@ import time
 import re
 from tokenize import group
 from . import base_utility
-alia = ['真假新生']
+alia = ['真假新生','内鬼pro']
 help = {
     'brief_help' : '发送 /真假新生 @要查的人 就可以知道有几个人是真的新生',
     'more' : '发送 /真假新生 @要查的人 机器人会告诉你，xxx还进了哪些群（和机器人的共同群）、进群时间',
