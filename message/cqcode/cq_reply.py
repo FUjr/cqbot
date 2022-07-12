@@ -1,11 +1,6 @@
 import re
-class cq_reply:
-    def __init__(self, data, api_queue, api_res,log_queue):
-        self.api_queue = api_queue
-        self.api_res = api_res
-        self.log_queue = log_queue
-        self.content_livetime = 300
-        
+from . import base_utility
+class cq_reply(base_utility.base_utility):  
     def run(self,data):
         #命令前置功能
         rex = r'(\/.*)'
