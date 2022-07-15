@@ -24,9 +24,9 @@ class plugin_onlinecheck(base_utility.base_utility):
     def run(self,data):
         lock = __main__.__dict__.get('lock')
         start = time.time()
-        global user_data
+        user_data = __main__.__dict__.get('user_data')
         #创建一个简易http服务器线程，通过管道通信
-        pipe = __main__.online_queue
+        
         
         #发送一条包含xml的消息
         url = 'http://onlinecheck.fjrcn.cn/'
