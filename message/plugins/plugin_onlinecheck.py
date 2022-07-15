@@ -32,8 +32,8 @@ class plugin_onlinecheck(base_utility.base_utility):
 <?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
 <msg serviceID="1" templateID="12345" action="web" brief="10s后自动撤回" sourceMsgId="0" url="www.baidu.com" flag="0" adverSign="0" multiMsgFlag="0">
 <item layout="2" advertiser_id="0" aid="0"><picture cover="%s" w="0" h="0" />
-<title>10s自动撤回</title><summary>检测中，10s自动撤回</summary></item><source name="" icon="%s0" action="" appid="-1" /></msg>
-        """% (ramdomUrl,ramdomUrl)
+<title>10s自动撤回</title><summary>检测中，10s自动撤回</summary></item><source name="" icon="%s" action="" appid="-1" /></msg>
+        """% (ramdomUrl,url)
         CQcode = '[CQ:xml,data=%s]' % xml_msg
         self.id = self.send_back_msg(CQcode)
         #等待10s，撤回消息，发送检测结果
@@ -68,6 +68,9 @@ class plugin_onlinecheck(base_utility.base_utility):
         return res
     
     def return_result(self):
+        raw = False
+        if 'rawip' in self.first_message['message_id']:
+            raw = True
         buffer = '窥屏检测结果如下：\n'
         count = 0
         self.recall_msg(self.id)
@@ -84,6 +87,8 @@ class plugin_onlinecheck(base_utility.base_utility):
                 if data['ip'] not in ips:
                     ips.add(data['ip'])
                     count += 1
+                    if raw:
+                        buffer += data['ip']
                     buffer += '来自 %s 的群友正在窥屏 \n' % self.get_ip_region(data['ip'])
           
         if count == 0:
