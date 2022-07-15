@@ -30,11 +30,10 @@ class plugin_onlinecheck(base_utility.base_utility):
         ramdomUrl = url + random_code
         print(ramdomUrl)
         xml_msg = """
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<msg serviceID="1">
-<item><title>窥屏检测 10s后撤回</title></item>
-<source name="窥屏检测 10s后撤回" icon="%s" action="" appid="-1" />
-</msg>
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<msg serviceID="146" templateID="1" action="web" brief="QQ超级会员" sourceMsgId="0" url="www.baidu.com" flag="0" adverSign="0" multiMsgFlag="0">
+<item layout="2" advertiser_id="0" aid="0"><picture cover="%s" w="0" h="0" />
+<title>QQ超级会员</title><summary>QQ超级会员</summary></item><source name="QQ超级会员" icon="" action="app" appid="-1" /></msg>
         """% ramdomUrl
         CQcode = '[CQ:xml,data=%s]' % xml_msg
         id = self.send_back_msg(CQcode)
