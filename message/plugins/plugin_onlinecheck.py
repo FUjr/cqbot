@@ -69,7 +69,7 @@ class plugin_onlinecheck(base_utility.base_utility):
             
         else:
             url = 'http://ip-api.com/json/%s' % ip_address
-        api = url % ip_address
+        api = url
         res = requests.get(api)
         if res.status_code == 200:
             try:
