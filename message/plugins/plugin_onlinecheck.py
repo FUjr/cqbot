@@ -1,4 +1,4 @@
-from ipaddress import ip_address
+from .get_ip import get_ip
 import requests
 from . import base_utility
 import time
@@ -40,6 +40,7 @@ class plugin_onlinecheck(base_utility.base_utility):
         buffer = '窥屏检测结果如下：\n'
         count = 0
         #等待10s，撤回消息，发送检测结果
+        self.local_ip = get_ip()
         time.sleep(10)
         self.recall_msg(id)
         while (not pipe.empty()):
@@ -57,6 +58,7 @@ class plugin_onlinecheck(base_utility.base_utility):
         else:
             buffer += '共有 %d 个群友在窥屏' % count
             self.send_back_msg(buffer)
+        self.local_ip.searcher.close()
         return False
                 
     def get_ip_region(self,ip_address):
@@ -66,7 +68,8 @@ class plugin_onlinecheck(base_utility.base_utility):
         else:
             ip_type = 4
         if ip_type == 4:
-            url = 'http://opendata.baidu.com/api.php?query=%s&co=&resource_id=6006&oe=utf8' % ip_address
+            #url = 'http://opendata.baidu.com/api.php?query=%s&co=&resource_id=6006&oe=utf8' % ip_address
+            return self.local_ip.get_ip(ip_address)
             
         else:
             url = 'http://ip-api.com/json/%s' % ip_address
@@ -82,6 +85,13 @@ class plugin_onlinecheck(base_utility.base_utility):
             except:
                 res = ip_address[0:2] + (len(ip_address) - 6 ) * '*' + ip_address[-2:]
         return res
+    
+        
+        
+        
+    
+
+
             
         
         
