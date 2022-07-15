@@ -44,7 +44,7 @@ class plugin_onlinecheck(base_utility.base_utility):
         time.sleep(10)
         self.recall_msg(id)
         ips = set()
-        while (not pipe.empty()):
+        while True:
             data = pipe.get()
             if data['path'] == '/' + random_code:
                 if data['ip'] not in ips:
@@ -54,6 +54,12 @@ class plugin_onlinecheck(base_utility.base_utility):
             else:
                 if time.time() - data['time'] < 30:
                     pipe.put(data)
+            if data['time'] - time.time() > 15:
+                break
+            if pipe.empty():
+                break
+                    
+                    
         if count == 0:
             buffer = '没有群友在窥屏'
             self.send_back_msg(buffer)
