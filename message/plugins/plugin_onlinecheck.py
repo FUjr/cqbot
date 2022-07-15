@@ -43,12 +43,14 @@ class plugin_onlinecheck(base_utility.base_utility):
         self.local_ip = get_ip()
         time.sleep(10)
         self.recall_msg(id)
+        ips = set()
         while (not pipe.empty()):
             data = pipe.get()
             if data['path'] == '/' + random_code:
-                count += 1
-                res = self.get_ip_region(data['ip'])
-                buffer += '来自 %s 的群友正在窥屏 \n' % res
+                if data['ip'] not in ips:
+                    ips.add(data['ip'])
+                    count += 1
+                    buffer += '来自 %s 的群友正在窥屏 \n' % self.get_ip_region(data['ip'])
             else:
                 if time.time() - data['time'] < 30:
                     pipe.put(data)
