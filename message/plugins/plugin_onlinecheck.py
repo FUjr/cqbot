@@ -71,7 +71,8 @@ class plugin_onlinecheck(base_utility.base_utility):
         count = 0
         self.recall_msg(id)
         ips = set()
-        get_data = requests.get('http://127.0.0.1:680/%s' % self.random_code)
+        res = requests.get('http://127.0.0.1:680/%s' % self.random_code)
+        get_data = json.loads(res.text)
         if len(get_data) == 0:
             buffer = '没有群友在窥屏'
             self.send_back_msg(buffer)
