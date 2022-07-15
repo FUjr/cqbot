@@ -45,16 +45,20 @@ class plugin_onlinecheck(base_utility.base_utility):
             data = pipe.get()
             if data['path'] == '/' + random_code:
                 res = self.get_ip_region(data['ip'])
+                print('%s  match' % data)
                 if res['status'] == '0':
                     if res['data'][0]['location'] == '':
                         buffer += 'ip %s\n' % data['ip']
                     region = res['data'][0]['location']
+                    
                     buffer += '来自 %s' %  region +  '\n'
                 else:
                     buffer += 'ip %s' % data['ip']
             else:
                 if time.time() - data['time'] < 30:
+                    print('%s not match put back' % data)
                     pipe.put(data)
+                    
         self.send_back_msg(buffer)
         return False
                 
