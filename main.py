@@ -59,6 +59,15 @@ def log_thread( log_queue :Queue):
         if log[0] > log_level:
             print(log[1])
 
+
+
+lock = threading.Lock()
+server1 = threading.Thread(target=onlinecheck.http_server,args=(lock,))
+server2 = threading.Thread(target=onlinecheck.return_data,args=(lock,))
+server1.start()
+server2.start()
+
+
 log_queue = Queue()
 api_queue = Queue()
 api_res_queue = Queue()
