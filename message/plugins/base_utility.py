@@ -71,8 +71,19 @@ class base_utility:
                             return True
         return False
                     
+    def recall_msg(self,id):
+        if isinstance(id,dict):
+            id = id['data']['message_id']
+        recall_api = 'delete_msg'
+        post_data = {
+            'message_id' : id
+        }
+        self.query_api(recall_api,post_data)
         
+            
 
     async def delay_callback(self,delay,function,*args,**kwargs):
         await asyncio.sleep(delay)
         function(*args,**kwargs)
+        
+    
