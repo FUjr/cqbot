@@ -5,6 +5,7 @@ from . import base_utility
 import time
 import __main__
 import json
+import asyncio
 
 alia = ['窥屏检测','在线监测']
 
@@ -37,7 +38,7 @@ class plugin_onlinecheck(base_utility.base_utility):
         self.id = self.send_back_msg(CQcode)
         #等待10s，撤回消息，发送检测结果
         self.local_ip = get_ip()
-        self.delay_callback(10,self.return_result)
+        asyncio.create_task(self.delay_callback(10,self.return_result))
         
                 
     def get_ip_region(self,ip_address):
