@@ -59,8 +59,6 @@ def log_thread( log_queue :Queue):
         if log[0] > log_level:
             print(log[1])
 
-user_data = []
-lock = threading.Lock()
 log_queue = Queue()
 api_queue = Queue()
 api_res_queue = Queue()
