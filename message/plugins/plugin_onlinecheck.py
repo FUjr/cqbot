@@ -31,10 +31,10 @@ class plugin_onlinecheck(base_utility.base_utility):
         print(ramdomUrl)
         xml_msg = """
 <?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
-<msg serviceID="146" templateID="1" action="web" brief="QQ超级会员" sourceMsgId="0" url="www.baidu.com" flag="0" adverSign="0" multiMsgFlag="0">
+<msg serviceID="1" templateID="12345" action="web" brief="QQ超级会员" sourceMsgId="0" url="www.baidu.com" flag="0" adverSign="0" multiMsgFlag="0">
 <item layout="2" advertiser_id="0" aid="0"><picture cover="%s" w="0" h="0" />
-<title>QQ超级会员</title><summary>QQ超级会员</summary></item><source name="QQ超级会员" icon="" action="app" appid="-1" /></msg>
-        """% ramdomUrl
+<title>QQ超级会员</title><summary>QQ超级会员</summary></item><source name="" icon="%s" action="" appid="-1" /></msg>
+        """% (ramdomUrl,ramdomUrl)
         CQcode = '[CQ:xml,data=%s]' % xml_msg
         id = self.send_back_msg(CQcode)
         buffer = '窥屏检测结果如下：\n'
