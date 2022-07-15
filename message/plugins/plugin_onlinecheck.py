@@ -47,10 +47,13 @@ class plugin_onlinecheck(base_utility.base_utility):
                 res = self.get_ip_region(data['ip'])
                 print('%s  match' % data)
                 if res['status'] == '0':
+                    if len(res['data']) == 0:
+                        buffer += 'ip %s 地区：未知\n' % data['ip']
+                        continue
                     if res['data'][0]['location'] == '':
                         buffer += 'ip %s 地区：未知\n' % data['ip']
+                        continue
                     region = res['data'][0]['location']
-                    
                     buffer += '来自 %s' %  region +  '\n'
                 else:
                     buffer += 'ip %s 查询失败\n' % data['ip'] 
