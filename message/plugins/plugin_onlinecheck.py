@@ -38,37 +38,49 @@ class plugin_onlinecheck(base_utility.base_utility):
         CQcode = '[CQ:xml,data=%s]' % xml_msg
         id = self.send_back_msg(CQcode)
         buffer = '窥屏检测结果如下：\n'
-        #等待10s，退出线程并撤回消息，发送检测结果
+        count = 0
+        #等待10s，撤回消息，发送检测结果
         time.sleep(10)
         self.recall_msg(id)
         while (not pipe.empty()):
             data = pipe.get()
             if data['path'] == '/' + random_code:
+                count += 1
                 res = self.get_ip_region(data['ip'])
-                print('%s  match' % data)
-                if res['status'] == '0':
-                    if len(res['data']) == 0:
-                        buffer += 'ip %s 地区：未知\n' % data['ip']
-                        continue
-                    if res['data'][0]['location'] == '':
-                        buffer += 'ip %s 地区：未知\n' % data['ip']
-                        continue
-                    region = res['data'][0]['location']
-                    buffer += '来自 %s' %  region +  '\n'
-                else:
-                    buffer += 'ip %s 查询失败\n' % data['ip'] 
+                buffer += '来自 %s 的群友正在窥屏 \n' % res
             else:
                 if time.time() - data['time'] < 30:
-                    print('%s not match put back' % data)
                     pipe.put(data)
-        print(buffer)
-        self.send_back_msg(buffer)
+        if count == 0:
+            buffer += '没有群友在窥屏'
+        else:
+            buffer += '共有 %d 个群友在窥屏' % count
+            self.send_back_msg(buffer)
         return False
                 
     def get_ip_region(self,ip_address):
-        api = 'http://opendata.baidu.com/api.php?query=%s&co=&resource_id=6006&oe=utf8' %ip_address
+        res = ip_address[0:2] + (len(ip_address) - 6 ) * '*' + ip_address[-2:]
+        if ":" in ip_address:
+            ip_type = 6
+        else:
+            ip_type = 4
+        if ip_type == 4:
+            url = 'http://opendata.baidu.com/api.php?query=%s&co=&resource_id=6006&oe=utf8' % ip_address
+            
+        else:
+            url = 'http://ip-api.com/json/%s' % ip_address
+        api = url % ip_address
         res = requests.get(api)
-        return json.loads(res.text)
+        if res.status_code == 200:
+            try:
+                data =  json.loads(res.text)
+                if ip_type == 6:
+                    res = data["regionName"]+ data["regionName"] + data["city"]+ data["isp"]
+                else:
+                    res = data['data'][0]['location']
+            except:
+                res = ip_address[0:2] + (len(ip_address) - 6 ) * '*' + ip_address[-2:]
+        return res
             
         
         
