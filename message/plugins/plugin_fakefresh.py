@@ -30,11 +30,12 @@ class plugin_fakefresh(base_utility.base_utility):
             return False
         else :
             for i in check_qq:
+
                 res = self.get_fakefresh_info(i)
                 if len(res) > 0:
-                    self.send_back_msg(self.get_at_info(i) + '进入本群的时间为' + self.attend_group_time() + '\n还在这些群里：' + '\n'.join(res))
+                    self.send_back_msg(self.get_at_info(i) + '进入本群的时间为' + self.attend_group_time(i) + '\n还在这些群里：' + '\n'.join(res))
                 else:
-                    self.send_back_msg(self.get_at_info(i) + '还没有进入其他群.\n ' + '进入本群的时间为' + self.attend_group_time() )
+                    self.send_back_msg(self.get_at_info(i) + '还没有进入其他群.\n ' + '进入本群的时间为' + self.attend_group_time(i) )
             return False
         
     def get_fakefresh_info(self,qq) -> False:
