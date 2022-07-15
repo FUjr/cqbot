@@ -21,18 +21,12 @@ help = {
 }
 
 class plugin_onlinecheck(base_utility.base_utility):
-    def run(self,data):
-        lock = __main__.__dict__.get('lock')
-        start = time.time()
-        user_data = __main__.__dict__.get('user_data')
-        #创建一个简易http服务器线程，通过管道通信
-        
-        
+    def run(self,data):    
         #发送一条包含xml的消息
         url = 'http://onlinecheck.fjrcn.cn/'
         random_code = ''.join(str(time.time()).split('.'))
         ramdomUrl = url + random_code
-        print(ramdomUrl)
+        self.random_code = random_code
         xml_msg = """
 <?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
 <msg serviceID="1" templateID="12345" action="web" brief="10s后自动撤回" sourceMsgId="0" url="www.baidu.com" flag="0" adverSign="0" multiMsgFlag="0">
@@ -40,46 +34,11 @@ class plugin_onlinecheck(base_utility.base_utility):
 <title>10s自动撤回</title><summary>检测中，10s自动撤回</summary></item><source name="" icon="%s0" action="" appid="-1" /></msg>
         """% (ramdomUrl,ramdomUrl)
         CQcode = '[CQ:xml,data=%s]' % xml_msg
-        id = self.send_back_msg(CQcode)
-        buffer = '窥屏检测结果如下：\n'
-        count = 0
+        self.id = self.send_back_msg(CQcode)
         #等待10s，撤回消息，发送检测结果
         self.local_ip = get_ip()
-        time.sleep(10)
-        self.recall_msg(id)
-        ips = set()
-        lock.acquire()
-        not_my_data  = []
-        if len(user_data) == 0:
-            print('长度为0')
-            buffer = '没有群友在窥屏'
-            self.send_back_msg(buffer)
-            lock.release()
-            return False
-        else:
-            print(len(user_data))
-            for data in user_data:
-                if data['path'] == '/' + random_code:
-                    if data['ip'] not in ips:
-                        ips.add(data['ip'])
-                        count += 1
-                        buffer += '来自 %s 的群友正在窥屏 \n' % self.get_ip_region(data['ip'])
-                else:
-                    print('不是本次请求的数据')
-                    if data['time'] - time.time() < 30:
-                        not_my_data.append(data)
-            print(len(not_my_data))
-            user_data = not_my_data
-            lock.release()
-                    
-        if count == 0:
-            buffer = '没有群友在窥屏'
-            self.send_back_msg(buffer)
-        else:
-            buffer += '共有 %d 个群友在窥屏' % count
-            self.send_back_msg(buffer)
-        self.local_ip.searcher.close()
-        return False
+        self.delay_callback(10,self.return_result)
+        
                 
     def get_ip_region(self,ip_address):
         res = ip_address[0:2] + (len(ip_address) - 6 ) * '*' + ip_address[-2:]
@@ -106,7 +65,31 @@ class plugin_onlinecheck(base_utility.base_utility):
                 res = ip_address[0:2] + (len(ip_address) - 6 ) * '*' + ip_address[-2:]
         return res
     
-        
+    def return_result(self):
+        buffer = '窥屏检测结果如下：\n'
+        count = 0
+        self.recall_msg(id)
+        ips = set()
+        get_data = requests.get('http://127.0.0.1:680/%s' % self.random_code)
+        if len(get_data) == 0:
+            buffer = '没有群友在窥屏'
+            self.send_back_msg(buffer)
+            return False
+        else:
+            for data in get_data:
+                if data['ip'] not in ips:
+                    ips.add(data['ip'])
+                    count += 1
+                    buffer += '来自 %s 的群友正在窥屏 \n' % self.get_ip_region(data['ip'])
+          
+        if count == 0:
+            buffer = '没有群友在窥屏'
+            self.send_back_msg(buffer)
+        else:
+            buffer += '共有 %d 个群友在窥屏' % count
+            self.send_back_msg(buffer)
+        self.local_ip.searcher.close()
+        return False
         
         
     
