@@ -46,6 +46,8 @@ class plugin_onlinecheck(base_utility.base_utility):
             if data['path'] == '/' + random_code:
                 res = self.get_ip_region(data['ip'])
                 if res['status'] == '0':
+                    if res['data'][0]['location'] == '':
+                        buffer += 'ip %s\n' % data['ip']
                     region = res['data'][0]['location']
                     buffer += '来自 %s' %  region +  '\n'
                 else:
