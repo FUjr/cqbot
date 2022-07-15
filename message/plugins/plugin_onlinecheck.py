@@ -51,10 +51,13 @@ class plugin_onlinecheck(base_utility.base_utility):
         lock.acquire()
         not_my_data  = []
         if len(user_data) == 0:
+            print('长度为0')
             buffer = '没有群友在窥屏'
             self.send_back_msg(buffer)
+            lock.release()
             return False
         else:
+            print(len(user_data))
             for data in user_data:
                 if data['path'] == '/' + random_code:
                     if data['ip'] not in ips:
@@ -62,7 +65,10 @@ class plugin_onlinecheck(base_utility.base_utility):
                         count += 1
                         buffer += '来自 %s 的群友正在窥屏 \n' % self.get_ip_region(data['ip'])
                 else:
-                    not_my_data.append(data)
+                    print('不是本次请求的数据')
+                    if data['time'] - time.time < 30:
+                        not_my_data.append(data)
+            print(len(not_my_data))
             user_data = not_my_data
             lock.release()
                     
