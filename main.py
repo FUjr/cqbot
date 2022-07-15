@@ -1,5 +1,6 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import asyncio
+from csv import unregister_dialect
 import traceback
 import websockets
 import json
@@ -60,7 +61,8 @@ def log_thread( log_queue :Queue):
             print(log[1])
 
 
-def http_server(pipe):
+def http_server(lock):
+        global user_data
         #创建socket对象
         s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
         #创建一个简易http服务器线程，通过管道通信
@@ -105,8 +107,9 @@ def http_server(pipe):
             else:
                 ua = 'unknown'
             report = {'ip':x_forward.replace(' ',''),'path':path,'ua':ua,'time':time.time()}
-            pipe.put(report)
-
+            user_data.append(report)
+user_data = []
+lock = threading.Lock()
 log_queue = Queue()
 api_queue = Queue()
 api_res_queue = Queue()
@@ -118,7 +121,7 @@ query_api = threading.Thread(target=query_api,args=(api_queue,api_res_queue))
 query_api.start() 
 print_log = threading.Thread(target=log_thread,args=(log_queue,))
 print_log.start()
-http_server = threading.Thread(target=http_server,args=(online_queue,))
+http_server = threading.Thread(target=http_server,args=(lock,))
 http_server.start()
 asyncio.run(getmessage()) 
 
