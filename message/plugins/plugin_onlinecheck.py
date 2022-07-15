@@ -66,7 +66,7 @@ class plugin_onlinecheck(base_utility.base_utility):
                         buffer += '来自 %s 的群友正在窥屏 \n' % self.get_ip_region(data['ip'])
                 else:
                     print('不是本次请求的数据')
-                    if data['time'] - time.time < 30:
+                    if data['time'] - time.time() < 30:
                         not_my_data.append(data)
             print(len(not_my_data))
             user_data = not_my_data
