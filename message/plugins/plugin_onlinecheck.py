@@ -1,9 +1,11 @@
+from xmlrpc.client import FastParser
 from .get_ip import get_ip
 import requests
 from . import base_utility
 import time
 import __main__
 import json
+
 alia = ['窥屏检测','在线监测']
 
 permission = {
@@ -20,7 +22,9 @@ help = {
 
 class plugin_onlinecheck(base_utility.base_utility):
     def run(self,data):
+        lock = __main__.__dict__.get('lock')
         start = time.time()
+        global user_data
         #创建一个简易http服务器线程，通过管道通信
         pipe = __main__.online_queue
         
@@ -44,21 +48,23 @@ class plugin_onlinecheck(base_utility.base_utility):
         time.sleep(10)
         self.recall_msg(id)
         ips = set()
-        while True:
-            data = pipe.get()
-            if data['path'] == '/' + random_code:
-                if data['ip'] not in ips:
-                    ips.add(data['ip'])
-                    count += 1
-                    buffer += '来自 %s 的群友正在窥屏 \n' % self.get_ip_region(data['ip'])
-            else:
-                if time.time() - data['time'] < 30:
-                    pipe.put(data)
-            if data['time'] - time.time() > 15:
-                break
-            if pipe.empty():
-                break
-                    
+        lock.acquire()
+        not_my_data  = []
+        if len(user_data) == 0:
+            buffer = '没有群友在窥屏'
+            self.send_back_msg(buffer)
+            return False
+        else:
+            for data in user_data:
+                if data['path'] == '/' + random_code:
+                    if data['ip'] not in ips:
+                        ips.add(data['ip'])
+                        count += 1
+                        buffer += '来自 %s 的群友正在窥屏 \n' % self.get_ip_region(data['ip'])
+                else:
+                    not_my_data.append(data)
+            user_data = not_my_data
+            lock.release()
                     
         if count == 0:
             buffer = '没有群友在窥屏'
