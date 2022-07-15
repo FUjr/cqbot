@@ -4,8 +4,7 @@ import time
 import json
 import threading
 get_data = []
-lock = threading.Lock()
-def http_server():
+def http_server(lock):
         global get_data
         #创建socket对象
         s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
@@ -57,7 +56,7 @@ def http_server():
             lock.release()
 
 
-def return_data():
+def return_data(lock):
     global get_data
     #创建socket对象
     s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
