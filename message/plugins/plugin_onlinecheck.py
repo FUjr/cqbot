@@ -69,7 +69,7 @@ class plugin_onlinecheck(base_utility.base_utility):
     def return_result(self):
         buffer = '窥屏检测结果如下：\n'
         count = 0
-        self.recall_msg(id)
+        self.recall_msg(self.id)
         ips = set()
         res = requests.get('http://127.0.0.1:680/%s' % self.random_code)
         print(res.text)
