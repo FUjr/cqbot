@@ -60,7 +60,7 @@ def log_thread( log_queue :Queue):
             print(log[1])
 
 
-
+#extension
 lock = threading.Lock()
 server1 = threading.Thread(target=onlinecheck.http_server,args=(lock,))
 server2 = threading.Thread(target=onlinecheck.return_data,args=(lock,))
