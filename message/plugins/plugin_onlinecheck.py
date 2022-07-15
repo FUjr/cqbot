@@ -52,7 +52,8 @@ class plugin_onlinecheck(base_utility.base_utility):
                 if time.time() - data['time'] < 30:
                     pipe.put(data)
         if count == 0:
-            buffer += '没有群友在窥屏'
+            buffer = '没有群友在窥屏'
+            self.send_back_msg(buffer)
         else:
             buffer += '共有 %d 个群友在窥屏' % count
             self.send_back_msg(buffer)
