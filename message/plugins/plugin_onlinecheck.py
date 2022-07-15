@@ -69,7 +69,7 @@ class plugin_onlinecheck(base_utility.base_utility):
     
     def return_result(self):
         raw = False
-        if 'rawip' in self.first_message['message_id']:
+        if 'rawip' in self.first_message['message']:
             raw = True
         buffer = '窥屏检测结果如下：\n'
         count = 0
