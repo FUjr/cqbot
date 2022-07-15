@@ -25,7 +25,7 @@ class plugin_onlinecheck(base_utility.base_utility):
         pipe = __main__.online_queue
         
         #发送一条包含xml的消息
-        url = 'https://tmpporxy.fjrcn.cn/'
+        url = 'http://onlinecheck.fjrcn.cn/'
         random_code = ''.join(str(time.time()).split('.'))
         ramdomUrl = url + random_code
         print(ramdomUrl)
