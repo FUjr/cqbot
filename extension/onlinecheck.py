@@ -110,8 +110,3 @@ def return_data():
         
         
 
-server1 = threading.Thread(target=http_server)
-server2 = threading.Thread(target=return_data)
-server1.start()
-server2.start()
-server1.join()
