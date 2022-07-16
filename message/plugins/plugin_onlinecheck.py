@@ -7,7 +7,7 @@ import __main__
 import json
 import asyncio
 
-alia = ['窥屏检测','在线监测']
+alia = ['窥屏检测','在线监测','在线检测1']
 
 permission = {
     'group' : [True,[]],
@@ -32,10 +32,10 @@ class plugin_onlinecheck(base_utility.base_utility):
         self.waittime = waittime
         xml_msg = """
 <?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
-<msg serviceID="1" templateID="12345" action="web" brief="%d后自动撤回" sourceMsgId="0" url="www.baidu.com" flag="0" adverSign="0" multiMsgFlag="0">
+<msg serviceID="1" templateID="12345" action="web" brief="%ds后自动撤回" sourceMsgId="0" url="www.baidu.com" flag="0" adverSign="0" multiMsgFlag="0">
 <item layout="2" advertiser_id="0" aid="0"><picture cover="%s" w="0" h="0" />
 <title>10s自动撤回</title><summary>检测中，%d自动撤回</summary></item><source name="" icon="%s/none" action="" appid="-1" /></msg>
-        """% (waittime,ramdomUrl,ramdomUrl,waittime)
+        """% (waittime,ramdomUrl,waittime,ramdomUrl)
         CQcode = '[CQ:xml,data=%s]' % xml_msg
         self.id = self.send_back_msg(CQcode)
         #等待10s，撤回消息，发送检测结果
