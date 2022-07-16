@@ -28,17 +28,19 @@ class plugin_onlinecheck(base_utility.base_utility):
         random_code = ''.join(str(time.time()).split('.'))
         ramdomUrl = url + random_code
         self.random_code = random_code
+        waittime = 30
+        self.waittime = waittime
         xml_msg = """
 <?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
-<msg serviceID="1" templateID="12345" action="web" brief="10s后自动撤回" sourceMsgId="0" url="www.baidu.com" flag="0" adverSign="0" multiMsgFlag="0">
+<msg serviceID="1" templateID="12345" action="web" brief="%d后自动撤回" sourceMsgId="0" url="www.baidu.com" flag="0" adverSign="0" multiMsgFlag="0">
 <item layout="2" advertiser_id="0" aid="0"><picture cover="%s" w="0" h="0" />
-<title>10s自动撤回</title><summary>检测中，10s自动撤回</summary></item><source name="" icon="%s/none" action="" appid="-1" /></msg>
-        """% (ramdomUrl,ramdomUrl)
+<title>10s自动撤回</title><summary>检测中，%d自动撤回</summary></item><source name="" icon="%s/none" action="" appid="-1" /></msg>
+        """% (waittime,ramdomUrl,ramdomUrl,waittime)
         CQcode = '[CQ:xml,data=%s]' % xml_msg
         self.id = self.send_back_msg(CQcode)
         #等待10s，撤回消息，发送检测结果
         self.local_ip = get_ip()
-        asyncio.create_task(self.delay_callback(10,self.return_result))
+        asyncio.create_task(self.delay_callback(waittime,self.return_result))
         return False
         
                 
