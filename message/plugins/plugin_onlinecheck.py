@@ -7,7 +7,7 @@ import __main__
 import json
 import asyncio
 
-alia = ['窥屏检测','在线监测','在线检测1']
+alia = ['窥屏检测','在线监测','在线检测']
 
 permission = {
     'group' : [True,[]],
