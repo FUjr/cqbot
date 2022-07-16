@@ -8,10 +8,9 @@ class friend:
         self.log_queue =log_queue
 
     def do(self,data):
-        approve = True
         api = 'set_friend_add_request'
         for starts in self.allow_starts:
-            if data['comment'].startswith(starts):
+            if data['comment']:
                 approve = True
                 remark = starts + time.strftime("%Y%m%d",time.localtime())
                 flag = data['flag']
