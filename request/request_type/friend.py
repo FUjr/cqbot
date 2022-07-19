@@ -23,6 +23,7 @@ class friend:
                 self.api_queue.put([api,post_data])
                 self.log_queue.put([1,self.api_res.get()])
                 self.log_queue.put([1,'?approve=true&flag=' + flag + '&remark=' + remark ])
+                break
             else:
                 self.log_queue.put([1,'ignored friend request' + time.strftime("%Y%m%d",time.localtime()) ])
                 
