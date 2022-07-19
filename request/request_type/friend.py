@@ -8,7 +8,7 @@ class friend:
         self.log_queue =log_queue
 
     def do(self,data):
-        approve == False
+        approve = False
         api = 'set_friend_add_request'
         for starts in self.allow_starts:
             approve = True
