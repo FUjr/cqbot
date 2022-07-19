@@ -11,10 +11,9 @@ class friend:
         approve == False
         api = 'set_friend_add_request'
         for starts in self.allow_starts:
-            if (1==1):
-                approve = True
-                remark = starts + time.strftime("%Y%m%d",time.localtime())
-                flag = data['flag']
+            approve = True
+            remark = starts + time.strftime("%Y%m%d",time.localtime())
+            flag = data['flag']
             if approve == True:
                 post_data = {
                     'approve' : True,
