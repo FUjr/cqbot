@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3 
 import asyncio
 from csv import unregister_dialect
 import traceback
@@ -26,23 +26,22 @@ async def getmessage():
             distribute(data)
 
 def distribute(data : dict) -> None:
-    if data["post_type"] == 'message':
-        try:
+    try:
+        if data["post_type"] == 'message':
             message_handler.distribute(data)
-        except Exception as e:
+        elif data['post_type'] == 'request':
+            request_handler.distribute(data)
+        elif data['post_type'] == 'notice':
+            notice_handler.distribute(data)
+        elif data['post_type'] == 'meta_event':
+            pass
+        else:
+            pass
+    except Exception as e:
             exc_type, exc_value, exc_traceback_obj = sys.exc_info()
             traceback.print_tb(exc_traceback_obj)
             log_queue.put([5,time.time()])
             log_queue.put([5,e.args])
-            
-    elif data['post_type'] == 'request':
-        request_handler.distribute(data)
-    elif data['post_type'] == 'notice':
-        notice_handler.distribute(data)
-    elif data['post_type'] == 'meta_event':
-        pass
-    else:
-        pass
 
 def query_api( api_queue : Queue,api_res_queue : Queue) -> None:
     while True:
