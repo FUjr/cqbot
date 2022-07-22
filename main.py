@@ -12,17 +12,20 @@ import notice
 import message
 from extension import onlinecheck
 import request
+from cqbot import cqbot
 
-ws = 'ws://192.168.3.5:6700'
-http_get = 'http://192.168.3.5:678/'
-log_level = 0
 
 async def getmessage():
-    async with websockets.connect(ws) as websocket:
-        while True:
-            data = await websocket.recv()
-            data = json.loads(data)
-            distribute(data)
+    while True:
+        async with websockets.connect() as websocket:
+            while True:
+                try:
+                    data = await websocket.recv()
+                    data = json.loads(data)
+                    distribute(data)
+                except:
+                    print('连接断开，10秒后自动重连')
+                    time.sleep(10)
 
 def distribute(data : dict) -> None:
     try:

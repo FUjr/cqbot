@@ -17,7 +17,8 @@ permission = {
 help = {
     'brief_help' : '用于刷新新的插件',
     'more' : '用于刷新新的插件，仅我可用',
-    'alia' : alia
+    'alia' : alia,
+    'display' : False,
 }
 
 

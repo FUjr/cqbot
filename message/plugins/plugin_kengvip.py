@@ -10,7 +10,8 @@ permission = {
     'group' : [True,[]],
     'private' : [False,[]],
     'member_id' : {},
-    'role' : 'member'
+    'role' : 'member',
+    'display' : False,
 }
 class kengvip(base_utility.base_utility):
     def get_group_info(self):

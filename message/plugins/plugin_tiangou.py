@@ -1,4 +1,3 @@
-from email.mime import base
 import sys
 from . import base_utility
 alia = ['舔狗']
@@ -7,7 +6,7 @@ permission = {
     'group' : [True,[]],
     'private' : [True,[]],
     'member_id' : {},
-    'role' : 'member'
+    'role' : 'member',
 }
 help = {
     'brief_help' : '你想要舔狗吗？',

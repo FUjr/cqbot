@@ -13,7 +13,8 @@ permission = {
 help = {
     'brief_help' : '来看看你是第几个进群的吧～',
     'more' : '直接输入 /进群顺序 ，就可以知道你是第几个进群的了',
-    'alia': alia
+    'alia': alia,
+    'display' : False,
 }
 class plugin_set_permission(base_utility.base_utility):
     def run(self,data):

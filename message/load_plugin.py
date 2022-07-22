@@ -1,5 +1,5 @@
 from . import plugins
-from . import cqcode
+
 from importlib import reload
 import __main__
 import sys

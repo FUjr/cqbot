@@ -27,6 +27,7 @@ class distribute:
             pass
 
         #处理cq码
+
         if '[CQ:' in data['message']:
             data = self.cqcode.distribute_cqcode(data)        
         if data['message_type'] == 'private':

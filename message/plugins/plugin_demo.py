@@ -12,7 +12,8 @@ permission = {
 help = {
     'brief_help' : '这是我用来测试的，无意义',
     'more' : '这是我用来测试的，无意义',
-    'alia' : alia
+    'alia' : alia,
+    'display' : False,
 }
 
 class plugin_demo(base_utility.base_utility):

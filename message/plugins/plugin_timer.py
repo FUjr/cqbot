@@ -127,4 +127,4 @@ class plugin_timer(base_utility.base_utility):
         return i
     
     def query_this_group_msg(self):
-        
+        pass

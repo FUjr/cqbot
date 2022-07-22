@@ -6,6 +6,7 @@ class cq_json(base_utility.base_utility):
     def run(self,data):
         rex = r'\[CQ:json,data=(.*?)\]'
         cqcode_list = re.findall(rex,data['message'])
+        self.add_log(1,data)
         if len(cqcode_list) > 0:
             for i in cqcode_list:
                 print(i)
@@ -28,9 +29,9 @@ class cq_json(base_utility.base_utility):
                         
         return data
     
-    def unescape(self,data):
-        unescape_dict = {'&amp;':'&','&#44;':',','&#93;':']','&#91;':'['}
-        for i in unescape_dict:
-            data = data.replace(i,unescape_dict[i])
+    def escape(self,data):
+        escape_dict = {'&amp;':'&','&#44;':',','&#93;':']','&#91;':'['}
+        for i in escape_dict:
+            data = data.replace(escape_dict[i],i)
         return data
         
