@@ -33,7 +33,7 @@ class plugin_rush(base_utility.base_utility):
                     hand.seek(hand.tell() + 1)
                     hand_x = hand.size[0]
                     hand_y = hand.size[1]
-                    bg = Image.new("RGBA", (hand_x, hand_y))
+                    bg = Image.new("RGBA", (hand_x, hand_y),'white')
                     hand.convert('RGBA')
                     if i < 3:
                         resized_ava = ava.resize((int(hand_x*(0.7)), int(hand_y*(0.7 - i * 0.1))))
