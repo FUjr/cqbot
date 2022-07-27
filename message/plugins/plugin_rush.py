@@ -16,7 +16,7 @@ permission = {
     'role' : 'member'
 }
 class plugin_rush(base_utility.base_utility):
-    def generate_image(qqid):
+    def generate_image(self,qqid):
         if isinstance(qqid, int):
             qqid = str(qqid)
         ava_api = 'http://q1.qlogo.cn/g?b=qq&s=640&nk=%s' % qqid
@@ -58,5 +58,6 @@ class plugin_rush(base_utility.base_utility):
             return False
         else:
             self.send_back_msg("揉@某个人，就可以获得他的表情包啦,也支持使用qq=xxxx的方式")
+            return False
         
         
