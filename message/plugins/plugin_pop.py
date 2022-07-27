@@ -87,4 +87,4 @@ class plugin_pop(base_utility.base_utility):
                     break
                 
 
-        gif_list[0].save('rush\pop_%s.gif' % qqid ,save_all=True,append_images=gif_list[1:], loop=0, duration=10,disposal=2)
+        gif_list[0].save('rush/pop_%s.gif' % qqid ,save_all=True,append_images=gif_list[1:], loop=0, duration=10,disposal=2)
