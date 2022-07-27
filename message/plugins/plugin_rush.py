@@ -44,7 +44,7 @@ class plugin_rush(base_utility.base_utility):
                     bg = Image.alpha_composite(bg, hand)
                     res_gif.append(bg)
         print('sussess_generate_image')
-        res_gif[0].save('rush/ava_%s.gif' % qqid, save_all=True, append_images=res_gif[1:], loop=0, duration=5, disposal=2)
+        res_gif[0].save('rush/ava_%s.gif' % qqid, save_all=True, append_images=res_gif[1:], loop=0, duration=3)
         
     def run(self,data):
         self.main()
