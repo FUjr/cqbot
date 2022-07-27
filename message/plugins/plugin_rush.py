@@ -25,6 +25,10 @@ class plugin_rush(base_utility.base_utility):
         res = requests.get(ava_api)
         ava = Image.open(io.BytesIO(res.content))
         ava.convert('RGBA')
+        for x in range(0,ava.size[0]):
+            for y in range(0,ava.size[1]):
+                if (x - ava.size[0]*0.5)*(x - ava.size[0]*0.5) + (y - ava.size[1]*0.5)*(y - ava.size[1]*0.5) > 0.25 * ava.size[0]*ava.size[1]:
+                    ava.putpixel((x,y),(0,0,0,0))
         res_gif = []
         with open("hand.gif", "rb") as fp:
             hand = Image.open(fp)

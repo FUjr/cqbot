@@ -67,6 +67,11 @@ class plugin_pop(base_utility.base_utility):
             moving_ava.paste(ava,(40,40))
             
             bg = Image.alpha_composite(moving_ava,bg)
+            for x in range(0,gif_x):
+                for y in range(0,gif_y):
+                    r,g,b,a = bg.getpixel((x,y))
+                    if (a == 0):
+                        bg.putpixel((x,y),(255,255,255,-1))
             gif_list.append(bg)
             count = 0
             y_index = [50,55,63,50,55,40,40]
@@ -80,6 +85,11 @@ class plugin_pop(base_utility.base_utility):
                     moving_ava.paste(ava,(40,y_index[count]))
                     
                     bg = Image.alpha_composite(moving_ava,bg)
+                    for x in range(0,gif_x):
+                        for y in range(0,gif_y):
+                            r,g,b,a = bg.getpixel((x,y))
+                            if (a == 0):
+                                bg.putpixel((x,y),(255,255,255,-1))
                     gif_list.append(bg)
                     count += 1
                 except:
