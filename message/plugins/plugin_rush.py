@@ -2,6 +2,8 @@ import re
 from PIL import Image
 import requests
 import io
+import os
+import __main__
 from . import base_utility
 alia = ['揉']
 help = {
@@ -47,7 +49,12 @@ class plugin_rush(base_utility.base_utility):
     def run(self,data):
         self.main()
         return False
-    
+    def send_image(self,path):
+        root_path = os.path.dirname(os.path.abspath(__main__.__file__))
+        path = os.path.join(root_path,path)
+        cq_code = '[CQ:image,file=' + path + ']'
+        self.send_back_msg(cq_code)
+        
     def main(self):
         rex = r'qq=(\d{1,})'
         match = re.findall(rex, self.first_message['message'])
