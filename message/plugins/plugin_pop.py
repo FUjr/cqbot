@@ -45,7 +45,7 @@ class plugin_pop(base_utility.base_utility):
         
         
     def generate_image(self,qqid):
-        ava_api = 'http://q1.qlogo.cn/g?b=qq&s=640&nk=%s' % str(1194436766)
+        ava_api = 'http://q1.qlogo.cn/g?b=qq&s=640&nk=%s' % str(qqid)
         res = requests.get(ava_api)
         raw_ava = Image.open(io.BytesIO(res.content))
         raw_ava.convert('RGBA')
