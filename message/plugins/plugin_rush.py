@@ -1,6 +1,5 @@
 import re
 from PIL import Image
-from numpy import mat
 import requests
 import io
 from . import base_utility
@@ -56,7 +55,7 @@ class plugin_rush(base_utility.base_utility):
             qqid = match[0]
             self.send_image('rush/ava_%s.gif' % qqid)
             self.generate_image(qqid)
-            return True
+            return False
         else:
             self.send_back_msg("揉@某个人，就可以获得他的表情包啦,也支持使用qq=xxxx的方式")
         
