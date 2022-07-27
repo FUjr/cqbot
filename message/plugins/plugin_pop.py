@@ -48,7 +48,7 @@ class plugin_pop(base_utility.base_utility):
         ava_api = 'http://q1.qlogo.cn/g?b=qq&s=640&nk=%s' % str(qqid)
         res = requests.get(ava_api)
         raw_ava = Image.open(io.BytesIO(res.content))
-        raw_ava.convert('RGBA')
+        raw_ava = raw_ava.convert('RGBA')
         for x in range(0,raw_ava.size[0]):
             for y in range(0,raw_ava.size[1]):
                 if (x - raw_ava.size[0]*0.5)*(x - raw_ava.size[0]*0.5) + (y - raw_ava.size[1]*0.5)*(y - raw_ava.size[1]*0.5) > 0.25 * raw_ava.size[0]*raw_ava.size[0]:
