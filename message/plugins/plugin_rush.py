@@ -60,8 +60,9 @@ class plugin_rush(base_utility.base_utility):
         match = re.findall(rex, self.first_message['message'])
         if match:
             qqid = match[0]
-            self.send_image('rush/ava_%s.gif' % qqid)
             self.generate_image(qqid)
+            self.send_image('rush/ava_%s.gif' % qqid)
+            
             return False
         else:
             self.send_back_msg("揉@某个人，就可以获得他的表情包啦,也支持使用qq=xxxx的方式")
