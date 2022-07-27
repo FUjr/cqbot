@@ -52,7 +52,7 @@ class plugin_pop(base_utility.base_utility):
         for x in range(0,raw_ava.size[0]):
             for y in range(0,raw_ava.size[1]):
                 if (x - raw_ava.size[0]*0.5)*(x - raw_ava.size[0]*0.5) + (y - raw_ava.size[1]*0.5)*(y - raw_ava.size[1]*0.5) > 0.25 * raw_ava.size[0]*raw_ava.size[0]:
-                    raw_ava.putpixel((x,y),(0,0,0,0))
+                    raw_ava.putpixel((x,y),(255,255,255,0))
                     
 
         with open('pop_1.gif','rb') as f:
