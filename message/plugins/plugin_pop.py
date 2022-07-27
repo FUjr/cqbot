@@ -35,7 +35,7 @@ class plugin_pop(base_utility.base_utility):
         if match:
             qqid = match[0]
             self.generate_image(qqid)
-            self.send_image('rush/ava_%s.gif' % qqid)
+            self.send_image('rush/pop_%s.gif' % qqid)
             
             return False
         else:
@@ -87,4 +87,4 @@ class plugin_pop(base_utility.base_utility):
                     break
                 
 
-        gif_list[0].save('rush\pop.gif',save_all=True,append_images=gif_list[1:], loop=0, duration=10,disposal=2)
+        gif_list[0].save('rush\pop_%s.gif' % qqid ,save_all=True,append_images=gif_list[1:], loop=0, duration=10,disposal=2)
