@@ -52,7 +52,7 @@ class plugin_rush(base_utility.base_utility):
     def send_image(self,path):
         root_path = os.path.dirname(os.path.abspath(__main__.__file__))
         path = os.path.join(root_path,path)
-        cq_code = '[CQ:image,file=' + path + ']'
+        cq_code = '[CQ:image,file=file://' + path + ']'
         self.send_back_msg(cq_code)
         
     def main(self):
