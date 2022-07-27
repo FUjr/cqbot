@@ -50,7 +50,7 @@ class plugin_rush(base_utility.base_utility):
     
     def main(self):
         rex = r'qq=(\d{1,})'
-        match = re.findall(rex, self.first_message)
+        match = re.findall(rex, self.first_message['message'])
         if match:
             qqid = match[0]
             self.send_image('rush/ava_%s.gif' % qqid)
