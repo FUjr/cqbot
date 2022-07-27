@@ -44,9 +44,9 @@ class plugin_rush(base_utility.base_utility):
                     bg = Image.alpha_composite(bg, hand)
                     for x in range(0,hand_x):
                         for y in range(0,hand_y):
-                            r,g,b,a = bg.get_pyxel(x,y)
+                            r,g,b,a = bg.getpixel((x,y))
                             if (a == 0):
-                                bg.put_pixel((x,y),(255,255,255,-1))
+                                bg.putpixel((x,y),(255,255,255,-1))
                             
                             
                     res_gif.append(bg)
