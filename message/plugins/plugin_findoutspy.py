@@ -191,7 +191,7 @@ class plugin_findoutspy(base_utility.base_utility):
 
             
     def gen_identity_list(self):
-        word_list = [['老婆','女朋友']]
+        word_list = [['老婆','女朋友'],["汤圆","丸子"],["哈密瓜","西瓜"],["包子","水饺"],["汉堡包","肉夹馍"],["宫锁心玉","宫锁珠帘"],["步步惊心","宫锁心玉"],["钢笔","中性笔"],["玫瑰","月季"],["董永","许仙"],["若曦","晴川"],["谢娜","李湘"],["孟非","乐嘉"],["牛奶","豆浆"],["保安","保镖"],["白菜","生菜"],["辣椒","芥末"],["赵敏","黄蓉"],["海豚","海狮"],["水盆","水桶"],["唇膏","口红"],["小笼包","灌汤包"],["薰衣草","满天星"],["富二代","高富帅"]]
         length = len(self.member_list)
         wordlist_index = random.randint(0,len(word_list)-1)
         random_common = random.randint(0,len(word_list[wordlist_index])-1)
