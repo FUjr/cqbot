@@ -28,7 +28,8 @@ class load_plugin():
         if self.check_blacklist():
             return False
         dialog_content = self.handle_first_message(data)
-        return dialog_content #dialog_content 就是self或者false
+        return dialog_content
+        #dialog_content 就是self或者false
 
     def handle_first_message(self,data):
         raw_message = data['raw_message']
@@ -44,20 +45,18 @@ class load_plugin():
                 else:
                     self.log_queue.put((5,'permission denied'))
                     return False
-                #try:
-                if 1 == 1:
-                    handler = getattr(sys.modules[__name__.replace(__class__.__name__,'plugins.') + plugins.command_dict[command]], plugins.command_dict[command])(data,
-                                                                                                                                                                   self.api_queue,self.api_res_queue,self.log_queue)
-                    self.log_queue.put([1,'loaded: ' + plugins.command_dict[command]])
-                    self.content = handler.run(data) #需要保存状态的模块，请在第一次run时返回self，不需要content的请返回False
-                    self.log_queue.put([1,'runed: ' + plugins.command_dict[command]])
-                    if self.content != False:
-                        return self
-                    else:
-                        return False
-                #except Exception as e:
-                #    self.log_queue.put([1,e.args])
-                #    return False
+
+                handler = getattr(sys.modules[__name__.replace(__class__.__name__,'plugins.') + plugins.command_dict[command]], plugins.command_dict[command])(data,
+                                                                                                                                                                self.api_queue,self.api_res_queue,self.log_queue)
+                self.log_queue.put([1,'loaded: ' + plugins.command_dict[command]])
+                self.content = handler.run(data) #需要保存状态的模块，请在第一次run时返回self，不需要content的请返回False
+                self.log_queue.put([1,'runed: ' + plugins.command_dict[command]])
+                if self.content != False:
+                    self.trigger = handler.trigger
+                    return self
+                else:
+                    return False
+
             else:
                 return False
         return False
@@ -70,6 +69,7 @@ class load_plugin():
             return False
         stillneed = self.content.add(data)
         if stillneed == True:
+            self.trigger = self.content.trigger
             return True
         else:
             self.content = False
