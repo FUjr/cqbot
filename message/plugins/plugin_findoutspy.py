@@ -61,7 +61,7 @@ class plugin_findoutspy(base_utility.base_utility):
                 self.member_list.append(res['user_id'])
                 self.send_back_msg('欢迎加[CQ:at,qq=%s]入谁是卧底，目前已有%d人' % (res['user_id'],len(self.member_list)))
             elif res['message'] == '开始游戏':
-                if res['user_id'] == initiator and len(self.member_list) >= 2:
+                if res['user_id'] == initiator and len(self.member_list) > 2:
                     del self.trigger['message']
                     self.last_join = 0
                     break
@@ -98,7 +98,7 @@ class plugin_findoutspy(base_utility.base_utility):
         
         ban_dict = {}
         skip = []
-        while (len(self.member_list) >= 2 and spy in self.member_list):
+        while (len(self.member_list) > 2 and spy in self.member_list):
             #陈述环节
             index = 0
             while (index < len(self.member_list)):
