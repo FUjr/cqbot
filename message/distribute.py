@@ -2,7 +2,7 @@ import time
 from . import load_cqcode
 from . import load_plugin
 from . import plugins
-from . import hook
+import re
 import asyncio
 
 class distribute:
@@ -10,61 +10,71 @@ class distribute:
         self.api_queue = api_queue
         self.api_res_queue = api_res_queue
         self.log_queue = log_queue
-        self.dialog_list = {}
-        #储存的对话对象
-        self.dialog_active_list = []
+        #三个管道，用于接收api消息，api消息处理结果，日志
+        self.group_dialog_dict = {}
+        self.private_dialog_dict = {}
+        
         #最后活跃的聊天
         self.dialog_livetime = dialog_livetime
+        #默认超时时间360s
         self.dialog_max_num = dialog_max_num
-        self.hook = hook.hook(self.api_queue,self.api_res_queue,self.log_queue)
         self.cqcode = load_cqcode.load_cqcode(self.api_queue,self.api_res_queue,self.log_queue)
+        
 
     def distribute(self,data : dict) -> None:
-        if_continue = self.hook.run(data)
-        if if_continue:
-            return 0
-        else:
-            pass
-
         #处理cq码
         if '[CQ:' in data['message']:
-            data = self.cqcode.distribute_cqcode(data)        
+            data = self.cqcode.distribute_cqcode(data)    
+        
         if data['message_type'] == 'private':
             user_id = data['user_id']
-            dialog_id = 'private_' + str(user_id)
-        if data['message_type'] == 'group':
+            dialog_dict = self.private_dialog_dict
+            if str(user_id) in dialog_dict:
+                selected_dialog_list = dialog_dict[str(user_id)]
+            else:
+                dialog_dict[str(user_id)] = []
+                selected_dialog_list = dialog_dict[str(user_id)]
+                
+        elif data['message_type'] == 'group':
             group_id = data ['group_id']
             user_id = data['user_id']
-            dialog_id = 'group_' + str(group_id) + '_' + str(user_id)
-        #创建对话对象的唯一id
-        if dialog_id in list(self.dialog_list.keys()):
-            need_content = self.dialog_list[dialog_id].handle_content(data)
-            #查看新消息是否需要保存状态
-            if need_content :
-                #若仍需要保存，则自身移动至活跃对象
-                self.dialog_active_list.remove(dialog_id)
-                self.dialog_active_list.append(dialog_id)
-                if len(self.dialog_active_list) > self.dialog_max_num:
-                    #若大于最大对话维持数，则删除最早的对话
-                    self.dialog_list.pop(self.dialog_active_list.pop(0))
+            dialog_dict = self.group_dialog_dict
+            if str(group_id) in dialog_dict:
+                selected_dialog_list = dialog_dict[str(group_id)]
             else:
-            #若无需保存状态，则删除自身
-                self.dialog_active_list.remove(dialog_id)
-                del self.dialog_list[dialog_id]
-            return 0
-        #如果存在则使用原有对象
-        else:
-        #如果不存在则新建对象
+                dialog_dict[str(group_id)] = []
+                selected_dialog_list = dialog_dict[str(group_id)]
+        
+        
+        dialog = False
+        self.check_lifetime(selected_dialog_list)
+        if len(selected_dialog_list) > 0:
+            try:
+                for d in selected_dialog_list:
+                    res = self.deal_trigger(d.trigger,data)
+                    if res == True:
+                        dialog = d
+                        del selected_dialog_list[selected_dialog_list.index(d)]
+            #如果触发了触发器，会直接返回第一个成功触发的对话对象.因此触发器应当小心编写，以免导致占用其他对话
+                        break     
+            except Exception as e:
+                self.log_queue.put([5,'触发器错误：'+ str(e)])
+
+
+        if not dialog:
             dialog = self.new_dialog(data)
-            if dialog :
-                self.dialog_list[dialog_id] = dialog
-                asyncio.create_task(self.delay_callback(dialog.content_livetime,self.check_lifetime,dialog_id))
-                #c创建对话对象的生命周期检查
-                self.dialog_active_list.append(dialog_id)
-                self.log_queue.put([1,'新建了一个对话：'+ dialog_id])
-            else:
-                pass
+            if dialog:
+                dialog.lastcall = time.time()
+                selected_dialog_list.append(dialog)
+
+        else:
+            need_content = dialog.handle_content(data)
+            if need_content:
+                dialog.lastcall = time.time()
+                selected_dialog_list.append(dialog)
             
+        
+    
 
 
 
@@ -75,23 +85,67 @@ class distribute:
         
         return dialog
     
-    def check_lifetime(self,dialog_id : str) -> bool:
-        if dialog_id not in self.dialog_list:
+    def check_lifetime(self,dialog_list:list) -> bool:
+        next_check = 600
+        if len(dialog_list) == 0:
             return False
-        dialog = self.dialog_list[dialog_id]
-        #对话检查生命周期
-        time.time()
-        since_last_chat = time.time() - dialog.last_time
-        if since_last_chat > dialog.content_livetime:
-            #若超过生命周期，则删除对话
-            self.dialog_active_list.remove(dialog_id)
-            del self.dialog_list[dialog_id]
-            self.log_queue.put([1,'对话已过期：'+ dialog_id])
-        else:
+        
+        for i in dialog_list:
+            if hasattr(i,'lastcall'):
+                if not hasattr(i,'lifetime'):
+                    lifetime = self.dialog_livetime
+                    res = time.time() - i.lastcall
+                else:
+                    lifetime = i.lifetime
+                    
+                if res > lifetime:
+                    dialog_list.remove(i)
+                    self.log_queue.put([1,'对话已过期，已移除'])
+                else:
+                    if res > next_check:
+                        next_check = res
+        asyncio.create_task(self.delay_callback(next_check,self.check_lifetime,dialog_list))
             
-            asyncio.create_task(self.delay_callback(since_last_chat,self.check_lifetime,dialog_id))
+    
+    
+    def deal_trigger(self,trigger:dict,data : dict) -> bool:
+        """
+        trigger type: dict 用于描述触发器类型[目前只支持account_id / message /function]，对每个trigger type的键值规定如下
+
+        * account_id 是一个列表，满足列表qqid都可以参与其中。
+        * message也是一个列表，可以是正则、也可以是字符串
+        * function则是一个函数对象，传参为cqhttp的上报消息，由插件的函数判断是否触发
+        """
+        def account_id_trigger(account_id_list : list,data) -> bool:
+            user_id = data['user_id']
+            if user_id in account_id_list:
+                return True
+            return False
+        
+        def message_trigger(message_list : list,data) -> bool:
+            message = data['message']
+            for msg in message_list:
+                if isinstance(msg,str):
+                    if message == msg:
+                        return True
+                elif isinstance(msg,re.compile):
+                    if message.match(msg):
+                        return True
+            return False
+        def function_trigger(trigger_function,data) -> bool:
+            res = trigger_function(data)
+            if res:
+                return True
+
+        support_trigger = {'account_id':account_id_trigger,'message':message_trigger,'function':function_trigger}
+        for i in trigger:
+            if i in support_trigger:
+                print('trigger type: '+i)
+                if support_trigger[i](trigger[i],data):
+                    return True
+
             
-            
+        
     async def delay_callback(self,delay,function,*args,**kwargs):
         await asyncio.sleep(delay)
         function(*args,**kwargs)
