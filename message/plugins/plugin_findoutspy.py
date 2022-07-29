@@ -85,14 +85,13 @@ class plugin_findoutspy(base_utility.base_utility):
             post_data['message'] = '你的身份是%s' % id_list[i]
             post_data['user_id'] = self.member_list[i]
             self.query_api(api,post_data)
-        self.send_back_msg('请各位查阅自己私聊的身份，组织一下语言。时间10秒钟')
-        asyncio.create_task(self.timeout_send(10,'start_game'))
+        self.send_back_msg('请各位查阅自己私聊的身份，组织一下语言。时间15秒钟')
+        asyncio.create_task(self.timeout_send(15,'start_game'))
         while True:
             res = yield 1
             if res == 'start_game':
                 break
-        self.send_back_msg("""游戏正式开始！！！！
-请参与者尽量按照机器人艾特的顺序发言，防止被过多刷屏。""") 
+        self.send_back_msg("""游戏正式开始！！！！请参与者尽量按照机器人艾特的顺序发言。""") 
         #游戏开始环节
         
         
@@ -172,8 +171,9 @@ class plugin_findoutspy(base_utility.base_utility):
                 self.send_back_msg('[CQ:at,qq=%s]被投票出局' % max_list[0])
                 if spy not in self.member_list:
                     break
-            else:
-                
+            elif len(max_list) == 0:
+                self.send_back_msg('超过30秒没有人投票，退出游戏')
+            elif len(max_list) > 1:
                 same = ''
                 for i in self.member_list:
                     skip.append(i)
@@ -226,7 +226,7 @@ class plugin_findoutspy(base_utility.base_utility):
                 self.g.send(send_data)
             except Exception as e:
                 print(e)
-        print('失效了')
+        print('失效了%s' % send_data)
         
         
                 
