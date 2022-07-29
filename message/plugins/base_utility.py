@@ -1,13 +1,14 @@
-from distutils.command.build_scripts import first_line_re
 import json
 import asyncio
-from xml.dom.expatbuilder import FILTER_REJECT
 class base_utility:
     def __init__(self,first_message,api_queue,api_res_queue,log_queue) -> None:
         self.api_queue  = api_queue
         self.api_res_queue = api_res_queue
         self.log_queue = log_queue
         self.first_message = first_message
+        self.trigger = {
+            'account_id' : [self.first_message["user_id"]],
+        }
 
     
 
