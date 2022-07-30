@@ -25,6 +25,7 @@ class plugin_findoutspy(base_utility.base_utility):
     def main(self) -> None:
         self.update_friend_list()
         self.trigger['message'] = ['加入']
+        self.conflect = 'findoutspy'
 #         self.send_back_msg("""欢迎使用谁是卧底
 # 注意事项：
 # 1、由于腾讯限制，请添加机器人好友，机器人才能给你发送你的身份
