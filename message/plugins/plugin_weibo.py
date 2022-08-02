@@ -1,6 +1,8 @@
+import json
 import requests
 from . import base_utility
 import time
+import json
 alia = ['resou','热搜']
 
 permission = {
@@ -20,17 +22,17 @@ class plugin_weibo(base_utility.base_utility):
         try:
             response = requests.get(self.url)
             if response.status_code == 200:
-                return response.json()
+                return json.loads(response.text)
             else:
                 return None
         except Exception as e:
             return None
         
-    def run(self):
+    def run(self,data):
         res = self.get_message()
         resou = '[%s]热搜\n'%time.strftime('%Y-%m-%d %H:%M:%S',time.localtime())
         if res:
-            for i in res[list]:
+            for i in res['list']:
                 resou += '%s 热度 %s \n' %(i['name'],i['hot'])
             self.send_back_msg(resou)
                 
