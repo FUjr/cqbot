@@ -1,4 +1,4 @@
-import request
+import requests
 from . import base_utility
 import time
 alia = ['resou','热搜']
@@ -15,14 +15,10 @@ help = {
     'alia' : alia
 }
 class plugin_weibo(base_utility.base_utility):
-    def __init__(self, config):
-        super().__init__(config)
-        self.url = 'https://tenapi.cn/resou/'
-
-
     def get_message(self):
+        self.url = 'https://tenapi.cn/resou/'
         try:
-            response = request.get(self.url)
+            response = requests.get(self.url)
             if response.status_code == 200:
                 return response.json()
             else:
