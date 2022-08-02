@@ -49,17 +49,17 @@ class plugin_resou(base_utility.base_utility):
         if len(url) == 0:
             url.append('https://tenapi.cn/resou/')
             resoutype.append('微博')
-        for i in url:
-            res = self.get_message(i)
-            print(res)
-            resou = '[%s]%s热搜\n'%(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime()),resoutype[url.index(i)])
+        for thisurl in url:
+            res = self.get_message(thisurl)
+            resou = '[%s]%s热搜\n'%(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime()),resoutype[url.index(thisurl)])
             if res:
                 for i in res['list']:
-                    if resoutype[url.index(i)] == '抖音' or resoutype[url.index(i)] == '微博' or resoutype[url.index(i)] == '百度':
+                    
+                    if resoutype[url.index(thisurl)] == '抖音' or resoutype[url.index(thisurl)] == '微博' or resoutype[url.index(thisurl)] == '百度':
                         resou += '%d %s [热度 %s] \n' %(res['list'].index(i)+1,i['name'],i['hot'])
-                    elif resoutype[url.index(i)] == '知乎':
+                    elif resoutype[url.index(thisurl)] == '知乎':
                         resou += '%d %s [关键词 %s] \n' %(res['list'].index(i)+1,i['query'],i['name'])
-                    elif resoutype[url.index(i)] == 'bilibili':
+                    elif resoutype[url.index(thisurl)] == 'bilibili':
                         resou += '%d %s  \n' %(res['list'].index(i)+1,i['showname'])
             self.send_back_msg(resou)
                 
