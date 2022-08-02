@@ -1,5 +1,6 @@
 import request
 from . import base_utility
+import time
 alia = ['resou','热搜']
 
 permission = {
@@ -31,7 +32,7 @@ class plugin_weibo(base_utility.base_utility):
         
     def run(self):
         res = self.get_message()
-        resou = '现在热搜：'
+        resou = '[%s]热搜\n'%time.strftime('%Y-%m-%d %H:%M:%S',time.localtime())
         if res:
             for i in res[list]:
                 resou += '%s 热度 %s \n' %(i['name'],i['hot'])
