@@ -33,7 +33,7 @@ class plugin_weibo(base_utility.base_utility):
         resou = '[%s]热搜\n'%time.strftime('%Y-%m-%d %H:%M:%S',time.localtime())
         if res:
             for i in res['list']:
-                resou += '%s 热度 %s \n' %(i['name'],i['hot'])
+                resou += '%d %s [热度 %s] \n' %(res['list'].index(i)+1,i['name'],i['hot'])
             self.send_back_msg(resou)
                 
         return False
