@@ -41,7 +41,7 @@ class plugin_resou(base_utility.base_utility):
             url.append('https://tenapi.cn/bilihot/')
             resoutype.append('bilibili')
         if '百度' in data['message']:
-            url.append('https://tenapi.cn/baiduresou/')
+            url.append('https://tenapi.cn/baiduhot/')
             resoutype.append('百度')
         if '微博' in data['message']:
             url.append('https://tenapi.cn/resou/')
