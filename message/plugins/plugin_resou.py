@@ -25,6 +25,7 @@ class plugin_resou(base_utility.base_utility):
             else:
                 return None
         except Exception as e:
+            print(e)
             return None
         
     def run(self,data):
@@ -49,11 +50,17 @@ class plugin_resou(base_utility.base_utility):
             url.append('https://tenapi.cn/resou/')
             resoutype.append('微博')
         for i in url:
-            res = self.get_message(url)
+            res = self.get_message(i)
+            print(res)
             resou = '[%s]%s热搜\n'%(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime()),resoutype[url.index(i)])
             if res:
                 for i in res['list']:
-                    resou += '%d %s [热度 %s] \n' %(res['list'].index(i)+1,i['name'],i['hot'])
-                self.send_back_msg(resou)
+                    if resoutype[url.index(i)] == '抖音' or resoutype[url.index(i)] == '微博' or resoutype[url.index(i)] == '百度':
+                        resou += '%d %s [热度 %s] \n' %(res['list'].index(i)+1,i['name'],i['hot'])
+                    elif resoutype[url.index(i)] == '知乎':
+                        resou += '%d %s [关键词 %s] \n' %(res['list'].index(i)+1,i['query'],i['name'])
+                    elif resoutype[url.index(i)] == 'bilibili':
+                        resou += '%d %s  \n' %(res['list'].index(i)+1,i['showname'])
+            self.send_back_msg(resou)
                 
         return False
