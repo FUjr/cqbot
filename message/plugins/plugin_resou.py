@@ -50,7 +50,7 @@ class plugin_resou(base_utility.base_utility):
             resoutype.append('微博')
         for i in url:
             res = self.get_message(url)
-            resou = '[%s]%s热搜\n'%time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(),resoutype[url.index(i)])
+            resou = '[%s]%s热搜\n'%time.strftime('%Y-%m-%d %H:%M:%S',time.localtime()),resoutype[url.index(i)]
             if res:
                 for i in res['list']:
                     resou += '%d %s [热度 %s] \n' %(res['list'].index(i)+1,i['name'],i['hot'])
