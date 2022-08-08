@@ -1,8 +1,7 @@
 
 import cv2
 import numpy as np
-import re
-import anti_word_guess
+import extension.anti_word_guess as anti_word_guess
 shape_5 = (160,136)
 shape_6 = (184,160)
 shape_7 = (208,184)
@@ -130,8 +129,10 @@ def get_info(img):
         words = anti_word_guess.right_index(words,letter_in_wrong_index,True)
     if letter_in_right_index:
         words = anti_word_guess.right_index(words,letter_in_right_index,False)
+    print(words)
     if len(words) >20:
         words = anti_word_guess.recommand_words(words)
         if len(words) > 20:
             words = words[:20]
+            
     return words

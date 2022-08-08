@@ -20,7 +20,7 @@ def recommand_words(words):
     for s in score:
         if s < min_repeat:
             min_repeat = s
-    print('推荐单词：' + str(score[min_repeat]))
+    return score[min_repeat]
     
 def letter_in_word(words:list,letter:str,istrue:bool) -> list:
     count = 0
