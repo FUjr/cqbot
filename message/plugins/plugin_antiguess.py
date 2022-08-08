@@ -4,6 +4,7 @@ import requests
 import extension.read_img as read_img
 import cv2
 import numpy as np
+import random
 alia = ['fuck','auto']
 help = {
     'brief_help' : '回复 理发店bot发的猜成语图片',
@@ -41,4 +42,6 @@ class plugin_antiguess(base_utility.base_utility):
         im = cv2.imdecode(np.frombuffer(r.content, np.uint8), cv2.IMREAD_GRAYSCALE) 
         words = read_img.get_info(im)
         self.send_back_msg('  '.join(words))
+        if len(words) > 1:
+            self.send_back_msg(words[random.randint(0,len(words)-1)])
         return False
