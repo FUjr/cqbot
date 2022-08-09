@@ -118,12 +118,12 @@ def get_info(img):
                     letter_not_in_word += litter
     words = anti_word_guess.words
     words_copy = words.copy()
-    count = 0
+
     for word in words_copy:
         if len(word) != word_len:
-            count += 1
             words.pop(word)
-    res = '移除了%d个长度不等于%d的单词' % (count,word_len)
+    print(len(words))
+    res = '有%d个长度等于%d的单词' % (len(words),word_len)
     logs = [res]
     if letter_in_word:
         words,log = anti_word_guess.letter_in_word(words,letter_in_word,True)
