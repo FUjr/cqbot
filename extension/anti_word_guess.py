@@ -13,14 +13,14 @@ def recommand_words(words:dict):
             for j in repeat:
                 s += repeat[j]
         if s in score:
-            score[s].append({word:words[word]})
+            score[s][word] = words[word]
         else:
-            score[s] = [{word:words[word]}]
+            score[s] = {word:words[word]}
     min_repeat = 1000
     for s in score:
         if s < min_repeat:
             min_repeat = s
-    print(score)
+    print(score[s])
     return score[min_repeat]
     
 def letter_in_word(words:dict,letter:str,istrue:bool) -> list:

@@ -44,15 +44,17 @@ class plugin_antiguess(base_utility.base_utility):
         im = cv2.imdecode(np.frombuffer(r.content, np.uint8), cv2.IMREAD_GRAYSCALE) 
         words,logs = read_img.get_info(im)
         logs.append(str(words))
-        logs.append('还有'+str(len(words))+'个成语')
+        logs.append('还有'+str(len(words))+'个词语')
         
         if 'fuck' in data['message']:
             self.send_back_msg(','.join(words))
             if len(logs) > 0:
                 self.send_image(self.text_to_image(logs))
         elif 'auto' in data['message']:
-            if len(words) > 1:
-                self.send_back_msg(words[random.randint(0,len(words)-1)])
+            w = []
+            for word in words:
+                w.append(word)
+            self.send_back_msg(w[random.randint(0,len(words)-1)])
         elif 'hit' in data['message']:
             translate = []
             for word in words:

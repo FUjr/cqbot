@@ -138,9 +138,7 @@ def get_info(img):
         words,log = anti_word_guess.right_index(words,letter_in_right_index,False)
         logs.append(log)
     if len(words) >20:
-        print(words)
         words = anti_word_guess.recommand_words(words)
-        if len(words) > 20:
-            words = words[:20]
+
             
     return words,logs
