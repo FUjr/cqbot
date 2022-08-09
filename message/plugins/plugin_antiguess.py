@@ -43,11 +43,20 @@ class plugin_antiguess(base_utility.base_utility):
         
         im = cv2.imdecode(np.frombuffer(r.content, np.uint8), cv2.IMREAD_GRAYSCALE) 
         words,logs = read_img.get_info(im)
-        logs.append(str(words))
         logs.append('还有'+str(len(words))+'个词语')
         
         if 'fuck' in data['message']:
-            self.send_back_msg(str(words))
+            w = {}
+            if len(words) > 20:
+                for i in range(20):
+                    key = random.choice(list(words.keys()))
+                    w[key] = words[key]
+            else:
+                w = words
+                
+                
+            self.send_back_msg(str(w))
+            logs.append(str(w))
             if len(logs) > 0:
                 self.send_image(self.text_to_image(logs))
         elif 'auto' in data['message']:
