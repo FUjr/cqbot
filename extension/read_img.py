@@ -116,7 +116,7 @@ def get_info(img):
             elif color == 'gray':
                 if litter not in letter_not_in_word:
                     letter_not_in_word += litter
-    words = anti_word_guess.words
+    words = anti_word_guess.words.copy()
     words_copy = words.copy()
 
     for word in words_copy:
