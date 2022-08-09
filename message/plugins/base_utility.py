@@ -20,7 +20,7 @@ class base_utility:
         step = 18
         font_size =15
         max_word_perline = 15
-        font = 'Dengb.TTF'
+        font = 'Dengb.ttf'
         
         if isinstance(texts,str):
             texts = [texts]
