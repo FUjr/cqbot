@@ -56,8 +56,7 @@ class plugin_antiguess(base_utility.base_utility):
         elif 'hit' in data['message']:
             translate = []
             for word in words:
-                if word in data['message']:
-                    translate.append(words[word])
+                translate.append(words[word])
             self.send_back_msg(','.join(translate))
         return False
         
