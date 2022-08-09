@@ -22,10 +22,20 @@ help = {
 
 
 class plugin_findoutspy(base_utility.base_utility):
+    def __del__(self):
+        #销毁所有的协程
+        for i in self.coro:
+            try:
+                i.cancel()
+            except:
+                continue
+            
+    
     def main(self) -> None:
         self.update_friend_list()
         self.trigger['message'] = ['加入']
         self.conflect = 'findoutspy'
+        self.coro = []
 #         self.send_back_msg("""欢迎使用谁是卧底
 # 注意事项：
 # 1、由于腾讯限制，请添加机器人好友，机器人才能给你发送你的身份
@@ -51,7 +61,8 @@ class plugin_findoutspy(base_utility.base_utility):
         
         #游戏准备环节,拉人
         while (len(self.member_list) < 10):
-            asyncio.create_task(self.timeout_send(15,{'message':'开始游戏','user_id':initiator,'self_id':'timeout!'}))
+            coro = asyncio.create_task(self.timeout_send(15,{'message':'开始游戏','user_id':initiator,'self_id':'timeout!'}))
+            self.coro.append(coro)
             res = yield 1
             if res['user_id'] not in self.member_list:
                 if res['user_id'] not in self.friend_list:
@@ -87,7 +98,8 @@ class plugin_findoutspy(base_utility.base_utility):
             post_data['user_id'] = self.member_list[i]
             self.query_api(api,post_data)
         self.send_back_msg('请各位查阅自己私聊的身份，组织一下语言。时间15秒钟')
-        asyncio.create_task(self.timeout_send(15,'start_game'))
+        coro = asyncio.create_task(self.timeout_send(15,'start_game'))
+        self.coro.append(coro)
         while True:
             res = yield 1
             if res == 'start_game':
@@ -110,7 +122,8 @@ class plugin_findoutspy(base_utility.base_utility):
                 
                 self.send_back_msg('请[CQ:at,qq=%s]发言，发言时间60秒钟' % self.member_list[index-1])
                 self.timeouter += 1
-                asyncio.create_task(self.timeout_send(60,'skip%s' % self.member_list[index-1]))
+                coro = asyncio.create_task(self.timeout_send(60,'skip%s' % self.member_list[index-1]))
+                self.coro.append(coro)
                 res = yield 1
                 if res == 'skip%s' % self.member_list[index-1]:
                     self.send_back_msg('[CQ:at,qq=%s]发言超时啦，自动跳过' % self.member_list[index-1])
@@ -133,7 +146,8 @@ class plugin_findoutspy(base_utility.base_utility):
             self.send_back_msg('请30秒内投票，@你认为的卧底，否则会计算弃票')
             vote_result = {}
             had_vote = set()
-            asyncio.create_task(self.timeout_send(30,'break'))
+            coro = asyncio.create_task(self.timeout_send(30,'break'))
+            self.coro.append(coro)
             while (len(had_vote) < len(self.member_list)):
                 res = yield 1
                 if res == 'break':
@@ -212,6 +226,8 @@ class plugin_findoutspy(base_utility.base_utility):
         self.friend_list = []
         for i in res['data']:
             self.friend_list.append(i['user_id'])
+    
+    
     
     async def timeout_send(self,timeout,send_data):
         self.timeouter += 1
