@@ -117,9 +117,14 @@ def get_info(img):
                 if litter not in letter_not_in_word:
                     letter_not_in_word += litter
     words = anti_word_guess.words
-    
-    words = [word for word in words if len(word) == word_len]
-    logs = []
+    words_copy = words.copy()
+    count = 0
+    for word in words_copy:
+        if len(word) != word_len:
+            count += 1
+            words.pop(word)
+    res = '移除了%d个长度不等于%d的单词' % (count,word_len)
+    logs = [res]
     if letter_in_word:
         words,log = anti_word_guess.letter_in_word(words,letter_in_word,True)
         logs.append(log)
@@ -133,6 +138,7 @@ def get_info(img):
         words,log = anti_word_guess.right_index(words,letter_in_right_index,False)
         logs.append(log)
     if len(words) >20:
+        print(words)
         words = anti_word_guess.recommand_words(words)
         if len(words) > 20:
             words = words[:20]
