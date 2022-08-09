@@ -57,7 +57,7 @@ class plugin_antiguess(base_utility.base_utility):
             translate = []
             for word in words:
                 translate.append(words[word])
-            self.text_to_image(translate)
+            self.send_image(self.text_to_image(translate))
         return False
         
         
