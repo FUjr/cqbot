@@ -47,7 +47,7 @@ class plugin_antiguess(base_utility.base_utility):
         logs.append('还有'+str(len(words))+'个词语')
         
         if 'fuck' in data['message']:
-            self.send_back_msg(','.join(words))
+            self.send_back_msg(str(words))
             if len(logs) > 0:
                 self.send_image(self.text_to_image(logs))
         elif 'auto' in data['message']:
