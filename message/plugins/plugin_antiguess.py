@@ -1,6 +1,7 @@
 import re
 from . import base_utility
 import requests
+from PIL import Image,ImageDraw,ImageFont
 import extension.read_img as read_img
 import cv2
 import numpy as np
@@ -18,7 +19,7 @@ permission = {
     'role' : ''
 }
 
-class plugin_antiguess(base_utility.base_utility):
+class plugin_antiguess(base_utility.base_utility):    
     def run(self,data):
         reply_re = r'.*?\[CQ:reply,id=(-?\d+)\].*?'
         reply_id = re.findall(reply_re,data['message'])
@@ -40,8 +41,22 @@ class plugin_antiguess(base_utility.base_utility):
         r = requests.get(url[0])
         
         im = cv2.imdecode(np.frombuffer(r.content, np.uint8), cv2.IMREAD_GRAYSCALE) 
-        words = read_img.get_info(im)
+        words,logs = read_img.get_info(im)
+        
+        logs.append('还有'+str(len(words))+'个成语')
         self.send_back_msg('  '.join(words))
+        if len(logs) > 0:
+            self.send_image(self.text_to_image(logs))
+            
         if len(words) > 1:
             self.send_back_msg(words[random.randint(0,len(words)-1)])
         return False
+        
+        
+                
+            
+            
+        
+            
+        
+    

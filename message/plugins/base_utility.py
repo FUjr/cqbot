@@ -1,5 +1,8 @@
 import json
 import asyncio
+import os
+from PIL import Image, ImageDraw, ImageFont
+import __main__
 class base_utility:
     def __init__(self,first_message,api_queue,api_res_queue,log_queue) -> None:
         self.api_queue  = api_queue
@@ -11,7 +14,67 @@ class base_utility:
         }
 
     
-
+    def text_to_image(self,texts:list or str):
+        start_x = 10
+        start_y = 10
+        step = 18
+        font_size =15
+        max_word_perline = 15
+        font = 'Dengb.TTF'
+        
+        if isinstance(texts,str):
+            texts = [texts]
+        rows_count = len(texts)
+        longest_x = 0
+        for text in texts:
+            x_length = 0
+            for  i in text:
+                if '\u4e00' <= i <= '\u9fff':
+                    x_length += step
+                else:
+                    x_length += step/2
+            if x_length > longest_x:
+                longest_x = x_length
+            row_count = x_length / step / max_word_perline + 1
+            rows_count += int(row_count)
+        column_count = int(longest_x / step ) +1 
+        if column_count > max_word_perline:
+            column_count = max_word_perline + 1
+        
+        img_x = column_count * (step+1)
+        img_y = rows_count * (step+1)
+        
+        
+        im = Image.new('RGB', (img_x,img_y), (255, 255, 255))
+        draw = ImageDraw.Draw(im)
+        font = ImageFont.truetype(font, font_size)
+        
+        
+        draw_x = start_x
+        draw_y = start_y
+        for text in texts:
+            index = 0
+            for j in text:
+                index += 1
+                draw.text((draw_x, draw_y), j, (0, 0, 0), font=font)
+                if '\u4e00' <= j <= '\u9fff':
+                    draw_x += step
+                else:
+                    draw_x += step/2
+                if draw_x > img_x - step/2:
+                    draw_y += step
+                    draw_x = start_x
+                
+            draw_y += step*2
+            draw_x = start_x
+        im.save('tmp/%s.jpg' %id(texts))
+        return 'tmp/%s.jpg' %id(texts)
+    
+    def send_image(self,path):
+        root_path = os.path.dirname(os.path.abspath(__main__.__file__))
+        path = os.path.join(root_path,path)
+        cq_code = '[CQ:image,file=file://' + path + ']'
+        self.send_back_msg(cq_code)
         
     def send_back_msg(self,message):
         if self.first_message['message_type'] == 'private':

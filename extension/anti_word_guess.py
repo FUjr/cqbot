@@ -35,8 +35,8 @@ def letter_in_word(words:list,letter:str,istrue:bool) -> list:
                 count += 1
                 copy_words.remove(word)
                 break
-    print('移除了%d个%s包含%s的单词' % (count,('不' if istrue else ''),letter))
-    return copy_words
+    log = '移除了%d个%s包含%s的单词' % (count,('不' if istrue else ''),letter)
+    return copy_words,log
 
             
 def right_index(words:list,indexs:list,istrue:bool) -> list:
@@ -50,8 +50,8 @@ def right_index(words:list,indexs:list,istrue:bool) -> list:
                 copy_words.remove(word)
                 break
     
-    print('移除了%s个%s满足%s的单词' % (count,('不' if istrue else ''),indexs))
-    return copy_words
+    log = '移除了%s个%s满足%s的单词' % (count,('不' if istrue else ''),indexs)
+    return copy_words,log
 
 f = open('words.json','r')
 words = json.load(f)
@@ -88,7 +88,7 @@ if __name__ == '__main__':
         if letter_in_right_index:
             indexs = re.findall(parse_re,letter_in_right_index)
             words = right_index(words,indexs,True)
-
+    
         recommand_words(words)
         print('剩余单词数量：%s'%len(words))
         print(words)

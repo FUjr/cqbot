@@ -119,20 +119,22 @@ def get_info(img):
     words = anti_word_guess.words
     
     words = [word for word in words if len(word) == word_len]
-    
+    logs = []
     if letter_in_word:
-        words = anti_word_guess.letter_in_word(words,letter_in_word,True)
+        words,log = anti_word_guess.letter_in_word(words,letter_in_word,True)
+        logs.append(log)
     if letter_not_in_word:
-        words = anti_word_guess.letter_in_word(words,letter_not_in_word,False)  
-
+        words,log = anti_word_guess.letter_in_word(words,letter_not_in_word,False)  
+        logs.append(log)
     if letter_in_wrong_index:
-        words = anti_word_guess.right_index(words,letter_in_wrong_index,True)
+        words,log = anti_word_guess.right_index(words,letter_in_wrong_index,True)
+        logs.append(log)
     if letter_in_right_index:
-        words = anti_word_guess.right_index(words,letter_in_right_index,False)
-    print(words)
+        words,log = anti_word_guess.right_index(words,letter_in_right_index,False)
+        logs.append(log)
     if len(words) >20:
         words = anti_word_guess.recommand_words(words)
         if len(words) > 20:
             words = words[:20]
             
-    return words
+    return words,logs
