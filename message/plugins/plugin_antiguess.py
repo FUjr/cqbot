@@ -1,5 +1,6 @@
 from fnmatch import translate
 import re
+from sqlite3 import SQLITE_FUNCTION
 from . import base_utility
 import requests
 from PIL import Image,ImageDraw,ImageFont
@@ -7,7 +8,7 @@ import extension.read_img as read_img
 import cv2
 import numpy as np
 import random
-alia = ['fuck','auto','hit']
+alia = ['fuck','auto','hit','left']
 help = {
     'brief_help' : '回复 理发店bot发的猜成语图片',
     'more' : '回复 理发店bot发的猜成语图片',
@@ -53,10 +54,10 @@ class plugin_antiguess(base_utility.base_utility):
                     w[key] = words[key]
             else:
                 w = words
-                
-                
-            self.send_back_msg(str(w))
             logs.append(str(w))
+            if len(logs) > 0:
+                self.send_image(self.text_to_image(logs))
+        elif 'left' in data['message']:
             if len(logs) > 0:
                 self.send_image(self.text_to_image(logs))
         elif 'auto' in data['message']:
